@@ -10,6 +10,9 @@ if(json_last_error() != JSON_ERROR_NONE) {
     return;
 }
 
+//Allows for the IP to get received as data. Only use when testing or creating fake data.
+//$hostaddress = getData('ip');
+
 $hostaddress = $_SERVER["REMOTE_ADDR"] ?? '127.0.0.1';
 $currentDate = date('Y-m-d H:i:s');
 
@@ -82,6 +85,8 @@ try {
         $addhistory->execute([$configres['ms_minerID'], getData('algo'), floor($hashrate), strtotime(date('Y-m-d H:i:00'))]);
         $addhistory->closeCursor();
     }
+
+    require_once dirname(__DIR__).'/plus/plusCalls.php';
 }
 catch(PDOException $e) {
     file_put_contents(dirname(__DIR__)."/__UNAM_LIB/Logs/endpoint-errors.log", "ENDPOINT ERROR: {$e->getMessage()}, LINE: {$e->getLine()}\r\n", FILE_APPEND);

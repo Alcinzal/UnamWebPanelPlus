@@ -1,43 +1,107 @@
-<img src="https://github.com/UnamSanctam/UnamWebPanel/blob/master/UnamWebPanel.png?raw=true">
+# UnamWebPanelPlus v0.1.0
 
-# UnamWebPanel v1.7.1
+This is a modified version of Unam's [UnamWebPanel](https://github.com/UnamSanctam/UnamWebPanel).
 
-A web panel currently used to optionally monitor and manage the [SilentCryptoMiner](https://github.com/UnamSanctam/SilentCryptoMiner). Might support any other projects I release in the future as well.
+## About
 
-## Setup
+I am pretty new to git and programming, therefore I must warn whoever decides to use this about incomplete, slow or bad code and possible security flaws. Use this version at own risk.
 
-The panel is quite easy to set up, the only real requirement is a  web server with PHP support. You can either host it yourself using Apache or something similar, or you can use any free or paid online webhost. Nearly all webhosts has PHP support so it should not be difficult to find one you can use.
+I was initially going to do a pull request, but thought I should rather fork it since my code is pretty different from Unam's code, and I also ended up adding more options than I originally was gonna add. This project was started mainly for the purpose of being able to save statistics for longer periods of time, but I ended up adding a little bit more.
 
-Here are some simple steps to get started:
-1. Download the panel files and open the UnamWebPane\config.php file with a text editor.
-2. Change the `$config['password'] = 'UnamSanctam';` (change `UnamSanctam` to your own password) to whatever password you wish to use, this is the password used to access the web panel.
-3. Upload the contents of the UnamWebPanel folder to your webhosts "public_html" folder or the respective folder for your specific webhost.
-4. Your web panel should now be up and running, you can browse to the URL or IP of your website and you should see the login screen if everything went correctly.
+And Unam if you are reading this, feel free to implement any of the features from this fork to your main project, and credit is not needed as I assume you will probably have to rewrite a lot of it.
 
-If you wish to add the web panel to the SilentCryptoMiner then enter the following website URL: `http://yourwebsite.com/api/endpoint.php` (replace yourwebsite.com with your URL or IP, also make sure to use the correct `http` or `https` protocol depending on if your site has SSL "support" or not) into the `API Endpoint URL` field inside the miner.
+## What is different?
 
-If you use something other than Apache or IIS to host the web panel then you should check if your database file is exposed to the internet, you can check it by visting the URL `http://yourwebsite.com/unamwebpanel.db` (replace yourwebsite.com with your URL or IP), if it says forbidden or doesn't display anything then your database is secured.
+I have a video showcasing the panel. Miners and statistics pages are unchanged. The IP addresses shown in the video are fake, it's only testing data. Here is the video, sorry for the flickering:
 
-### For local testing
+https://github.com/Alcinzal/UnamWebPanelPlus/assets/153958388/03144cbe-210d-443a-a33c-0dafddeb7eec
 
-If you simply want to set up a local web panel for testing then here are some simple steps to do so.
-1. Download XAMPP and install it
-2. Extract the UnamWebPanel files into `C:\xampp\htdocs` (or wherever you installed it)
-3. Open the XAMPP Control Panel and press the "Start" button next to "Apache"
-4. Browse to http://localhost/ and you should be able to login (default password `UnamSanctam`) and view the web panel
 
-Then if you want any local miners on your computer to connect to it then enter http://localhost/api/endpoint.php into the "API Endpoint URL" of the miners in the miner builder.
+* Added the XSS patch from https://github.com/UnamSanctam/UnamWebPanel/issues/317#issuecomment-1884683799
 
-## Wiki
+### Configurations
+* Increased the height of the configurations boxes.
+* Added an examples box, so users can easily view how a configuration should look like. (Might be missing some options)
 
-You can find the wiki [here](https://github.com/UnamSanctam/SilentCryptoMiner/wiki) or at the top of the page. (In progress)
+### Plus
+* Added Plus page
+* Total hashrate section. View the current hashrates, current miners for each hashrate, and average hashrate per miner.
+* Statistics sections. Here you can view hourly data for Hashrate, Total Miners, Total Online miners, etc. You can also choose between viewing the data hourly, daily, weekly or monthly.
+* Countries section. Here you get to view a pie chart of the amount of miners from each country.
+
+### Specific Files
+#### page-loader.php
+* Add access to plus.php
+
+#### index.php
+* Add Plus navigation tiem
+
+#### configurationsAjax.php
+* Add Examples section (bad implementation)
+
+#### endpoint.php
+* Add require_once plusCalls.php
+* Added a comment that, when uncommented, allows the IP to get passed through as data. Only use when testing or adding fake data.
+
+#### config.php
+* Edit version to "PLUS 0.1.0"
+
+#### Plus
+* Added the Plus folder with all the Plus features.
+
+## Why/How?
+
+### Statistics
+A PHP file that saves the statistics gets called each time the endpoint gets called. This saves the data to a json file, the reason for it being a json file and not the database, is because I really don't know yet how to use the database. I will try to change this in the future. The PHP file will write the data to the current hour, meaning that data saved 12:03 will get overwritten by data saved 12:50. This is to prevent large buildups of data. So I guess one could say that the data gets saved hourly. When choosing the intervals between daily, weekly and monthly, it simply takes the values and gets the average of them, it also saves the chosen interval to local storage.
+
+The Total Extra statistics box was originally gonna get used so that I could see how many new miners I get daily/weekly/monthly, but I decided to add the other options aswell, but I see now it makes it a little bit messy.
+
+### Countries
+This section uses https://api.country.is/ to get the country code of the IP address of every miner. Usage is simply: https://api.country.is/8.8.8.8. This data then also gets saved to a json file, which is used by the pie chart. I tried estimating the refresh time but it is wrong most of the time. I was originally gonna try to implement this at the miners tab, so that you could see the country in the table, but I found it too difficult. Might get it working later though. Unknown country means that the api returned an error.
+
+
+## What needs to be worked on?
+
+### Bugs
+* When visting between the Plus page and the Statistics page, the charts at Statistics disappear until you refresh the page.
+* The charts at the plus statistics section will sometimes say that the end of the year is week 1, but it should say week 52 or 53.
+* The charts dont update when resizing the browser window.
+
+### Ideas
+Here are some ideas, brainstorming I guess, so some of them might be dumb or useless.
+* Instead of saving all statistics to a json file, save it to the database instead.
+* Add settings section, where one can change the config.php file from the panel (might pose a security risk).
+* Add another settings section where the user can adjust how often or for how long the plusStats gets saved.
+* Being able to disable the WebPanel in case it gets hacked, so the miners just use their chosen settings instead of the Panels settings. However if the WebPanel is hacked I suppose the hacker could just enable it again anyways haha.
+* Offline miners being removed automatically after a chosen period of time.
+* Add backuping, being able to backup the database file (and statistics json files) every now and then to another server, or to a cloud service like MEGA.io or Google drive. This way if you get banned for whatever reason, you still have your database and statistics files.
+* Save which legends are hidden or shown at the statistics section.
+* Adding a table to the countries section, so I can view more details on each country, like how many miners, what the total hashrate is for each country for each algorithm. Maybe also add a region table/chart.
+* Automatically choosing a configuration based on where the miner is based. Don't know how important this would be, but I think I saw someone suggesting it at Unam's Github. 
+* Adding translation for the different languages at the Plus section.
+* Add a chart or table that shows which processes cause the most stealth pausing.
+* Add a chart or table for top online GPUs and CPUs and how much they mine.
+* Maybe some sort of indicator in the statistics chart that shows when you changed the configuration, this way you can sort of optimize your configuration by testing different configs and then look at the statistics when you had the results you're looking for.
+* Adding an advanced page, where you can add miners/data to the database, for testing.
+* Adding a update section, where you can check for updates from the github, and if there is a new update it updates it automatically.
+
+Here you can see a screenshot of how it might look below the countries section, if I ever complete it.
+![image](https://github.com/Alcinzal/UnamWebPanelPlus/assets/153958388/36d8684d-bdac-43dc-b569-a2dcc3ad7d2f)
+
 
 ## Supported Projects
 
 * [SilentCryptoMiner](https://github.com/UnamSanctam/SilentCryptoMiner)
 
 ## Changelog
-
+### PLUS 0.1.0 (2024-01-14)
+* Added the XSS patch by UNAM
+* Increased the height of the configurations boxes.
+* Added an examples configurations box.
+* Added Plus page
+* Added total hashrate section.
+* Added statistics section. 
+* Added countries section.
 ### 1.7.1 (06/01/2023)
 * Moved miner statistics to a new "Statistics" page
 * Added more statistics such as GPU, CPU, Version and Algorithm graphs
@@ -82,7 +146,11 @@ You can find the wiki [here](https://github.com/UnamSanctam/SilentCryptoMiner/wi
 
 [You can view the full Changelog here](CHANGELOG.md)
 
-## Author
+## Plus Author
+
+* **Alcinzal**
+
+## Original Author
 
 * **Unam Sanctam**
 
@@ -109,7 +177,7 @@ By using this software, you automatically agree to the above.
 
 This project is licensed under the MIT License - see the [LICENSE](/LICENSE) file for details
 
-## Donate
+## Donate (UNAM)
 
 XMR: 8BbApiMBHsPVKkLEP4rVbST6CnSb3LW2gXygngCi5MGiBuwAFh6bFEzT3UTufiCehFK7fNvAjs5Tv6BKYa6w8hwaSjnsg2N
 

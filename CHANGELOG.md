@@ -1,8 +1,11 @@
-### 1.7.2 (2024-01-14)
+### PLUS 0.1.0 (2024-01-14)
 * Added the XSS patch by UNAM
-
-PLUS STARTS HERE ^^
-
+* Increased the height of the configurations boxes.
+* Added an examples configurations box.
+* Added Plus page
+* Added total hashrate section.
+* Added statistics section. 
+* Added Countries section.
 ### 1.7.1 (06/01/2023)
 * Moved miner statistics to a new "Statistics" page
 * Added more statistics such as GPU, CPU, Version and Algorithm graphs

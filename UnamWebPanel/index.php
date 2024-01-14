@@ -64,6 +64,14 @@ $loadurl = $page ?: 'miners';
                             </p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="" class="nav-link nav-page" data-page="plus">
+                            <i class="nav-icon fas fa-solid fa-plus"></i>
+                            <p>
+                                <?php echo 'Plus'; ?>
+                            </p>
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>

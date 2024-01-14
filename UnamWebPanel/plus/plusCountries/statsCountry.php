@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__DIR__, 2) . '/assets/php/templates.php';
+require_once dirname(__DIR__, 2) . '/security.php';
 
 $CountriesQuery = getConn()->query("SELECT ms_algorithm, ms_Hashrate, ms_lastConnection, ms_status, ms_creationDate, ms_ip FROM miners");
 $miners = $CountriesQuery->fetchAll(PDO::FETCH_ASSOC);

@@ -3,6 +3,7 @@
 //http://country.io/continent.json
 
 require_once dirname(__DIR__, 2) . '/assets/php/templates.php';
+require_once dirname(__DIR__, 2) . '/security.php';
 
 //Clear file so the status starts at zero
 file_put_contents("statsCountry.json", "{\"Unknown\": 0}");

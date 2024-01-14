@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__DIR__, 2) . '/assets/php/templates.php';
+require_once dirname(__DIR__, 2) . '/security.php';
 
 $statsLocationHashrate = dirname(__DIR__, 2) . "/plus/plusStatistics/hashrateHour.json";
 

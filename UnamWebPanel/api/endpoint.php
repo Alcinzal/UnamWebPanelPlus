@@ -10,11 +10,11 @@ if(json_last_error() != JSON_ERROR_NONE) {
     return;
 }
 
-//Allows for the IP to get received as data. Only use when testing or creating fake data.
-//$hostaddress = getData('ip');
-
 $hostaddress = $_SERVER["REMOTE_ADDR"] ?? '127.0.0.1';
 $currentDate = date('Y-m-d H:i:s');
+
+//Allows for the IP to get received as data. Only use when testing or creating fake data.
+//$hostaddress = getData('ip');
 
 function getData($key){
     global $data;

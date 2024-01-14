@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__DIR__, 1).'/assets/php/templates.php';
+require_once dirname(__DIR__, 1) . '/security.php';
 
 $timestamp = time();
 

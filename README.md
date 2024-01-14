@@ -66,6 +66,7 @@ This section uses https://api.country.is/ to get the country code of the IP addr
 * When visting between the Plus page and the Statistics page, the charts at Statistics disappear until you refresh the page.
 * The charts at the plus statistics section will sometimes say that the end of the year is week 1, but it should say week 52 or 53.
 * The charts dont update when resizing the browser window.
+* IMPORTANT: The JSON files are available to whoever visits them directly. 
 
 ### Ideas
 Here are some ideas, brainstorming I guess, so some of them might be dumb or useless.

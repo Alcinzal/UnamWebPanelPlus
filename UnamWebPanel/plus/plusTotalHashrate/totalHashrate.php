@@ -1,4 +1,6 @@
 <?php
+require_once dirname(__DIR__, 2) . '/security.php';
+
 function calculateTotalHashrate($algorithm, $miners)
 {
     $informationAlgorithms = array();

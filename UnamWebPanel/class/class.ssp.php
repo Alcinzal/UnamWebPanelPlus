@@ -30,7 +30,14 @@ class SSP {
     private static function data_output ( $options, $data ) {
         $out = array();
         $columns = $options['columns'];
-        for ( $i=0, $ien=count($data) ; $i<$ien ; $i++ ) {
+
+        $escapedData = array_map(function ($data) {
+            return array_map(function ($value) {
+                return htmlspecialchars($value, ENT_QUOTES, 'UTF-8', false);
+            }, $data);
+        }, $data);
+
+        for ( $i=0, $ien=count($escapedData) ; $i<$ien ; $i++ ) {
             $row = array();
             $cur = 0;
             for ( $j=0, $jen=count($columns) ; $j<$jen ; $j++ ) {
@@ -40,10 +47,10 @@ class SSP {
                     continue;
                 }
                 else if (isset( $column['formatting'] ) ) {
-                    $row[$cur] = $column['formatting']( $data[$i][ self::column_name_out($column) ], $data[$i] );
+                    $row[$cur] = $column['formatting']($escapedData[$i][self::column_name_out($column)], $escapedData[$i]);
                 }
                 else {
-                    $row[$cur] = $data[$i][ self::column_name_out($column) ];
+                    $row[$cur] = $escapedData[$i][self::column_name_out($column)];
                 }
                 $cur++;
             }

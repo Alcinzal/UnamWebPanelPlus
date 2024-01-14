@@ -15,7 +15,7 @@ $currentDate = date('Y-m-d H:i:s');
 
 function getData($key){
     global $data;
-    return $data[$key] ?? '';
+    return htmlspecialchars($data[$key], ENT_QUOTES, 'UTF-8') ?? '';
 }
 
 $uqhash = substr(md5(getData('computername').getData('cpu')), 0, 16);

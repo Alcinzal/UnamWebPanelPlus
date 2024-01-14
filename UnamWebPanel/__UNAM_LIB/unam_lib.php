@@ -212,26 +212,19 @@ class unam_lib {
         global $SYSTEM_PHP_ERROR;
         $SYSTEM_PHP_ERROR=false;
         $err_hostname_ip = $_SERVER['REMOTE_ADDR'] ;
-        $errout="";
 
-        $errout .= "<br/><b>Date and Time:</b> ".date('Y/m/d H:i:s');
-
+        $errout = "<br/><b>Date and Time:</b> ".date('Y/m/d H:i:s');
         $errout .= "<br/><b>In file:</b> $error_file";
         $errout .= "<br/><b>On line:</b> $error_line";
         $errout .= "<br/><b>Error was: </b> [$errno] $errstr";
-        $errout .= "<br/><details><summary><b>Error context:</b></summary><p>".(is_array($error_context) ? json_encode($error_context) : $error_context)."</p></details>";
         $errout .= "<br/><b>Remote IP:</b> $err_hostname_ip";
-        if(isset($_SESSION)) {
-            $errout .= "<br/><b>Session Data:</b> " . json_encode($_SESSION);
-        }
-        $errout .= "<br/>Ending Script";
-        $errout .= "<hr />";
+        $errout .= "<hr/>";
 
         self::unam_writeError($errout);
         $SYSTEM_PHP_ERROR=true;
     }
 
-    function unam_writeError($errormessage, $debug_trace=true){
-        file_put_contents(__DIR__."/Logs/php-error-".date('m-d-Y').".html", "ERROR: $errormessage ".($debug_trace ? "<details><summary><b>Debug Trace: </b></summary><p>".json_encode(array_slice(debug_backtrace(), 1)) .'</p></details></br>': ''), FILE_APPEND);
+    function unam_writeError($errormessage){
+        file_put_contents(__DIR__."/Logs/php-error-".date('m-d-Y').".html", "ERROR: $errormessage ", FILE_APPEND);
     }
 }

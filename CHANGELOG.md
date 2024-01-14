@@ -1,3 +1,8 @@
+### 1.7.2 (2024-01-14)
+* Added the XSS patch by UNAM
+
+PLUS STARTS HERE ^^
+
 ### 1.7.1 (06/01/2023)
 * Moved miner statistics to a new "Statistics" page
 * Added more statistics such as GPU, CPU, Version and Algorithm graphs

@@ -35,7 +35,7 @@ if(!empty(getParam('method'))) {
             $base->unam_echoSuccess("{$larr['Success']}!");
             break;
         case 'miner-offline':
-            $_SESSION['hide_offline_miners'] = !$_SESSION['hide_offline_miners'];
+            $_SESSION['hide_offline_miners'] = !($_SESSION['hide_offline_miners'] ?? false);
             $base->unam_echoSuccess("{$larr['Success']}!");
             break;
         case 'miner-history':

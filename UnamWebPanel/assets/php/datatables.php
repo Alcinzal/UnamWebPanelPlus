@@ -61,7 +61,7 @@
                         'display'=>$larr['Pool'],
                         'formatting'=>function($d){
                             global $larr;
-                            return  empty($d) ? unamtStatusColor('red', $larr['pool_connection_error']) : $d;
+                            return empty($d) ? unamtStatusColor('red', $larr['pool_connection_error']) : $d;
                         }
                     ],
                     'port'=>[
@@ -150,7 +150,7 @@
                             if($configs) {
                                 $configoptions .= "<option value='0'>{$larr['None']}</option>";
                                 foreach ($configs as $configdata) {
-                                    $configoptions .= "<option value='{$configdata['cf_configID']}' " . ($configdata['cf_configID'] == $d ? 'selected' : '') . ">{$configdata['cf_name']}</option>";
+                                    $configoptions .= "<option value='{$configdata['cf_configID']}' " . ($configdata['cf_configID'] == $d ? 'selected' : '') . ">".$configdata['cf_name']."</option>";
                                 }
                             }
                             return unamtSelect('','config', $configoptions, ['classes'=>'select-miner-config', 'extras'=>"data-method='miner-config' data-index='{$s[0]}'"]);

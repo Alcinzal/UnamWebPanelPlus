@@ -5,8 +5,8 @@ require_once dirname(__DIR__, 2) . '/security.php';
 $OnlineOfflineQuery = getConn()->query("SELECT st_date, st_onlineMiners, st_offlineMiners FROM statistics");
 $miners = $OnlineOfflineQuery->fetchAll(PDO::FETCH_ASSOC);
 
-$existingDataOnlineMiners = array();
-$existingDataOfflineMiners = array();
+$existingDataOnline = array();
+$existingDataOffline = array();
 
 foreach ($miners as $miner) {
     $date = $miner['st_date'];

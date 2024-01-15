@@ -8,10 +8,14 @@ $miners = $CountriesQuery->fetchAll(PDO::FETCH_ASSOC);
 $countriesArray = array();
 
 foreach ($miners as $miner) {
-    if($miner['ms_country'] != 'Unknown'){
+    if ($miner['ms_country'] != 'Unknown') {
+        if (!isset($countriesArray[$miner['ms_country']])) {
+            $countriesArray[$miner['ms_country']] = 0;
+        }
         $countriesArray[$miner['ms_country']]++;
     }
 }
+
 
 asort($countriesArray);
 

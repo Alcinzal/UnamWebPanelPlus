@@ -1,13 +1,8 @@
-# UnamWebPanelPlus v0.1.0
+# UnamWebPanelPlus v0.2.0
 
 This is a modified version of Unam's [UnamWebPanel](https://github.com/UnamSanctam/UnamWebPanel).
 
 ## What is different?
-
-I have a video showcasing the panel. Statistics pages is unchanged. The IP addresses shown in the video are fake, it's only testing data. Here is the video, sorry for the flickering:
-(this video is outdated)
-
-https://github.com/Alcinzal/UnamWebPanelPlus/assets/153958388/03144cbe-210d-443a-a33c-0dafddeb7eec
 
 ### General
 
@@ -26,6 +21,13 @@ https://github.com/Alcinzal/UnamWebPanelPlus/assets/153958388/03144cbe-210d-443a
 * Total hashrate section. View the current hashrates, current miners for each hashrate, and average hashrate per miner.
 * Statistics sections. Here you can view hourly data for Hashrate, Total Miners, Total Online miners, etc. You can also choose between viewing the data hourly, daily, weekly or monthly.
 * Countries section. Here you get to view a pie chart of the amount of miners from each country.
+
+### Video
+
+I have a video showcasing the panel. Statistics pages is unchanged. The IP addresses shown in the video are fake, it's only testing data. Here is the video, sorry for the flickering:
+(this video is outdated)
+
+https://github.com/Alcinzal/UnamWebPanelPlus/assets/153958388/03144cbe-210d-443a-a33c-0dafddeb7eec
 
 ## Why/How?
 

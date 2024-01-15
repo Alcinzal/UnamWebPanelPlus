@@ -2,11 +2,19 @@
 require_once dirname(__DIR__, 2) . '/assets/php/templates.php';
 require_once dirname(__DIR__, 2) . '/security.php';
 
-$statsLocationHashrate = dirname(__DIR__, 2) . "/plus/plusStatistics/hashrateHour.json";
+$hashrateQuery = getConn()->query("SELECT st_date, st_hashrate FROM statistics");
+$miners = $hashrateQuery->fetchAll(PDO::FETCH_ASSOC);
 
-//$statsLocationHashrate = dirname(__DIR__, 2) . "/plus/plusStatistics/output.json";
+$existingDataHashrate = array();
 
-$existingDataHashrate = file_exists($statsLocationHashrate) ? json_decode(file_get_contents($statsLocationHashrate), true) : array();
+foreach ($miners as $miner) {
+    $date = $miner['st_date'];
+    $hashrateData = json_decode($miner['st_hashrate'], true);
+
+    foreach ($hashrateData as $key => $value) {
+        $existingDataHashrate[$date][$key] = $value;
+    }
+}
 
 ?>
 <h2>Total Hashrate</h2>
@@ -19,7 +27,8 @@ $existingDataHashrate = file_exists($statsLocationHashrate) ? json_decode(file_g
         <option value="monthly">Monthly</option>
     </select>
     <div class="tooltipPlus">?
-        <span style="width: 250px;" class="tooltiptextPlus">Gets average values based on chosen interval</span>
+        <span style="width: 250px;" class="tooltiptextPlus">Gets average values based on chosen interval. Might result
+            in impractical values.</span>
     </div>
 </div>
 <div style="background-color:#343a40;">
@@ -30,13 +39,6 @@ $existingDataHashrate = file_exists($statsLocationHashrate) ? json_decode(file_g
 <script src='../UnamWebPanel/plus/plusFunctions.js'></script>
 
 <script>
-    document.getElementById('timeIntervalHashrate').addEventListener('change', updateChartHashrate);
-    var defaultIntervalHashrate = localStorage.getItem('defaultIntervalHashrate');
-
-    if (defaultIntervalHashrate) {
-        document.getElementById('timeIntervalHashrate').value = defaultIntervalHashrate;
-    }
-
     var myChartHashrate = null;
 
     // Your PHP array
@@ -61,13 +63,55 @@ $existingDataHashrate = file_exists($statsLocationHashrate) ? json_decode(file_g
         mainLabelsHashrate.sort();
     }
 
+    localStorageCreator()
+
+    document.getElementById('timeIntervalHashrate').addEventListener('change', updateChartHashrate);
+    var defaultIntervalHashrate = JSON.parse(localStorage.getItem('TotalHashrate'))['defaultInterval'];
+
+    if (defaultIntervalHashrate) {
+        document.getElementById('timeIntervalHashrate').value = defaultIntervalHashrate;
+    }
+
     updateChartHashrate()
 
-    function updateChartHashrate() {
-        var selectedValueHashrate = document.getElementById('timeIntervalHashrate').value;
-        localStorage.setItem('defaultIntervalHashrate', selectedValueHashrate);
+    function localStorageCreator() {
+        var name = "TotalHashrate"
+        var TotalHashrate = localStorage.getItem(name);
 
+        if (TotalHashrate) {
+            try {
+                TotalHashrate = JSON.parse(TotalHashrate)
+            }
+            catch {
+                TotalHashrate = {}
+            }
+        }
+        else {
+            TotalHashrate = {}
+        }
+
+        if (!(TotalHashrate['defaultInterval'] !== undefined)) {
+            TotalHashrate['defaultInterval'] = document.getElementById('timeIntervalHashrate').value;
+        }
+
+        TotalHashrate['Legends'] = TotalHashrate['Legends'] || {};
+
+        for (let date in existingDataHashrate) {
+            for (let label in existingDataHashrate[date]) {
+                if (!(TotalHashrate['Legends'][label] !== undefined)) {
+                    TotalHashrate['Legends'][label] = null
+                }
+            }
+        }
+
+        localStorage.setItem(name, JSON.stringify(TotalHashrate));
+    }
+
+    function updateChartHashrate() {
         var selectedInterval = document.getElementById('timeIntervalHashrate').value;
+        var TotalHashrate = JSON.parse(localStorage.getItem('TotalHashrate'));
+        TotalHashrate['defaultInterval'] = selectedInterval
+        localStorage.setItem('TotalHashrate', JSON.stringify(TotalHashrate));
 
         if (selectedInterval == "hourly") {
             dataHourlyHashrate();
@@ -80,7 +124,6 @@ $existingDataHashrate = file_exists($statsLocationHashrate) ? json_decode(file_g
     function dataHourlyHashrate() {
         var hourlyKeys = new Set();
 
-        // Collect all keys from all data points
         mainLabelsHashrate.forEach(label => {
             if (existingDataHashrate[label]) {
                 Object.keys(existingDataHashrate[label]).forEach(key => {
@@ -92,14 +135,7 @@ $existingDataHashrate = file_exists($statsLocationHashrate) ? json_decode(file_g
             }
         });
 
-        // Create datasets based on all available keys
-        const datasets = Array.from(hourlyKeys).map(key => ({
-            label: key,
-            data: mainLabelsHashrate.map(label => existingDataHashrate[label][key] || 0), // Use 0 if the key is not present
-            fill: true,
-        }));
-
-        createChartHashrate(datasets, mainLabelsHashrate);
+        createChartHashrate(hourlyKeys, mainLabelsHashrate, existingDataHashrate);
     }
 
     function dataAverageHashrate() {
@@ -137,24 +173,30 @@ $existingDataHashrate = file_exists($statsLocationHashrate) ? json_decode(file_g
             }
         });
 
+
+
         Labels = Object.keys(Values)
-        //Get the average
         Labels.forEach(date => {
             Keys.forEach(key => {
-                Values[date][key] = Values[date][key] / ValuesCount[date];
+                Values[date][key] = Math.round(Values[date][key] / ValuesCount[date]);
             });
         });
 
-        const datasets = Array.from(Keys).map(key => ({
-            label: key,
-            data: Labels.map(label => Values[label][key] || 0), // Use 0 if the key is not present
-            fill: true,
-        }));
-
-        createChartHashrate(datasets, Labels);
+        createChartHashrate(Keys, Labels, Values);
     }
 
-    function createChartHashrate(datasets, labels) {
+    function createChartHashrate(keys, labels, values) {
+        const datasets = Array.from(keys).map(key => {
+            var totalHashrateData = JSON.parse(localStorage.getItem("TotalHashrate"));
+
+            return {
+                label: key,
+                data: labels.map(label => values[label][key] || 0),
+                fill: true,
+                hidden: totalHashrateData ? totalHashrateData['Legends'][key] : null,
+            };
+        });
+
         if (myChartHashrate != null) {
             myChartHashrate.clear();
             myChartHashrate.destroy();
@@ -173,7 +215,24 @@ $existingDataHashrate = file_exists($statsLocationHashrate) ? json_decode(file_g
                     legend: {
                         labels: {
                             color: "white",
-                        }
+                        },
+                        onClick: function (e, legendItem, legend) {
+                            const index = legendItem.datasetIndex;
+                            const ci = legend.chart;
+                            if (ci.isDatasetVisible(index)) {
+                                ci.hide(index);
+                                legendItem.hidden = true;
+                            } else {
+                                ci.show(index);
+                                legendItem.hidden = false;
+                            }
+
+                            var totalHashrate = JSON.parse(localStorage.getItem("TotalHashrate"));
+
+                            totalHashrate['Legends'][legendItem.text] = legendItem.hidden
+
+                            localStorage.setItem("TotalHashrate", JSON.stringify(totalHashrate));
+                        },
                     },
                 },
                 scales: {

@@ -111,5 +111,6 @@ $langarr = [
     'new_miners'=>['en'=>'New Miners', 'sv'=>'Nya Miners'],
     'Today'=>['en'=>'Today', 'sv'=>'Idag'],
     'Days'=>['en'=>'Days', 'sv'=>'Dagar'],
-    'hashrate_history_disabled'=>['en'=>'Hashrate history is currently disabled, it can be enabled inside config.php.', 'sv'=>'Hashratehistoriken är för närvarande inaktiverad, den kan aktiveras inuti config.php.']
+    'hashrate_history_disabled'=>['en'=>'Hashrate history is currently disabled, it can be enabled inside config.php.', 'sv'=>'Hashratehistoriken är för närvarande inaktiverad, den kan aktiveras inuti config.php.'],
+    'Country' => ['en'=>'Country', 'sv'=>'Land', 'fr'=>'Pays', 'de'=>'Land', 'pl'=>'Kraj', 'ru'=>'Страна', 'uk'=>'Країна', 'es'=>'País']
 ];

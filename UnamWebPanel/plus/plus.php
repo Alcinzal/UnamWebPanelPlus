@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__DIR__, 1).'/assets/php/templates.php';
-require_once dirname(__DIR__, 1) . '/security.php';
+require_once dirname(__DIR__, 1).'/security.php';
 
 $timestamp = time();
 
@@ -16,23 +16,29 @@ echo '<html>
 
 // TOTAL HASHRATE
 echo '<h1>Total Hashrate</h1>';
-include("plus/plusTotalHashrate/totalHashrate.php");
+include("plus/totalHashrate/totalHashrate.php");
 
 
 //STATISTICS
 echo '<h1>Statistics<h1>
 <div class="statistics-section">
 <div class="plus-box">';
-include("plus/plusStatistics/statsHashrate.php");
+include("plus/statistics/viewHashrate.php");
 echo '</div>
 <div class="plus-box">';
-include("plus/plusStatistics/statsExtra.php");
+include("plus/statistics/viewExtra.php");
+echo '</div>';
+echo '</div>
+<div class="statistics-section">
+<div class="plus-box">';
+include("plus/statistics/viewOnlineOffline.php");
 echo '</div>';
 echo '</div>';
 
+
 //COUNTRIES
 echo '<h1>Countries<h1>';
-include("plus/plusCountries/statsCountry.php");
+include("plus/countries/countries.php");
 
 // HTML END
 echo '</body></html>';

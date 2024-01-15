@@ -2,22 +2,20 @@
 
 This is a modified version of Unam's [UnamWebPanel](https://github.com/UnamSanctam/UnamWebPanel).
 
-## About
-
-I am pretty new to git and programming, therefore I must warn whoever decides to use this about incomplete, slow or bad code and possible security flaws. Use this version at own risk.
-
-I was initially going to do a pull request, but thought I should rather fork it since my code is pretty different from Unam's code, and I also ended up adding more options than I originally was gonna add. This project was started mainly for the purpose of being able to save statistics for longer periods of time, but I ended up adding a little bit more.
-
-And Unam if you are reading this, feel free to implement any of the features from this fork to your main project, and credit is not needed as I assume you will probably have to rewrite a lot of it.
-
 ## What is different?
 
-I have a video showcasing the panel. Miners and statistics pages are unchanged. The IP addresses shown in the video are fake, it's only testing data. Here is the video, sorry for the flickering:
+I have a video showcasing the panel. Statistics pages is unchanged. The IP addresses shown in the video are fake, it's only testing data. Here is the video, sorry for the flickering:
+(this video is outdated)
 
 https://github.com/Alcinzal/UnamWebPanelPlus/assets/153958388/03144cbe-210d-443a-a33c-0dafddeb7eec
 
+### General
 
 * Added the XSS patch from https://github.com/UnamSanctam/UnamWebPanel/issues/317#issuecomment-1884683799
+* Database is different, includes a statistics table and a country column in the miners table.
+
+### Miners
+* Added a country column
 
 ### Configurations
 * Increased the height of the configurations boxes.
@@ -29,36 +27,13 @@ https://github.com/Alcinzal/UnamWebPanelPlus/assets/153958388/03144cbe-210d-443a
 * Statistics sections. Here you can view hourly data for Hashrate, Total Miners, Total Online miners, etc. You can also choose between viewing the data hourly, daily, weekly or monthly.
 * Countries section. Here you get to view a pie chart of the amount of miners from each country.
 
-### Specific Files
-#### page-loader.php
-* Add access to plus.php
-
-#### index.php
-* Add Plus navigation tiem
-
-#### configurationsAjax.php
-* Add Examples section (bad implementation)
-
-#### endpoint.php
-* Add require_once plusCalls.php
-* Added a comment that, when uncommented, allows the IP to get passed through as data. Only use when testing or adding fake data.
-
-#### config.php
-* Edit version to "PLUS 0.1.0"
-
-#### Plus
-* Added the Plus folder with all the Plus features.
-
 ## Why/How?
 
 ### Statistics
-A PHP file that saves the statistics gets called each time the endpoint gets called. This saves the data to a json file, the reason for it being a json file and not the database, is because I really don't know yet how to use the database. I will try to change this in the future. The PHP file will write the data to the current hour, meaning that data saved 12:03 will get overwritten by data saved 12:50. This is to prevent large buildups of data. So I guess one could say that the data gets saved hourly. When choosing the intervals between daily, weekly and monthly, it simply takes the values and gets the average of them, it also saves the chosen interval to local storage.
-
-The Total Extra statistics box was originally gonna get used so that I could see how many new miners I get daily/weekly/monthly, but I decided to add the other options aswell, but I see now it makes it a little bit messy.
+A PHP file that saves the statistics gets called each time the endpoint gets called. This saves the current data to the database. The PHP file will write the data to the current hour, meaning that data saved 12:03 will get overwritten by data saved 12:50. This is to prevent large buildups of data. So I guess one could say that the data gets saved hourly. When choosing the intervals between daily, weekly and monthly, it simply takes the values and gets the average of them, it also saves the chosen interval and hidden/shown legends(labels) to local storage.
 
 ### Countries
-This section uses https://api.country.is/ to get the country code of the IP address of every miner. Usage is simply: https://api.country.is/8.8.8.8. This data then also gets saved to a json file, which is used by the pie chart. I tried estimating the refresh time but it is wrong most of the time. I was originally gonna try to implement this at the miners tab, so that you could see the country in the table, but I found it too difficult. Might get it working later though. Unknown country means that the api returned an error.
-
+To find which country the miners are from, https://country.is/ is used. Usage is simply: https://api.country.is/8.8.8.8. The country only gets checked if the miner does not exist in the database, aka it's a new miner.
 
 ## What needs to be worked on?
 
@@ -66,17 +41,17 @@ This section uses https://api.country.is/ to get the country code of the IP addr
 * When visting between the Plus page and the Statistics page, the charts at Statistics disappear until you refresh the page.
 * The charts at the plus statistics section will sometimes say that the end of the year is week 1, but it should say week 52 or 53.
 * The charts dont update when resizing the browser window.
-* IMPORTANT: The JSON files are available to whoever visits them directly. 
+* ~~IMPORTANT: The JSON files are available to whoever visits them directly.~~ 
 
 ### Ideas
 Here are some ideas, brainstorming I guess, so some of them might be dumb or useless.
-* Instead of saving all statistics to a json file, save it to the database instead.
+* ~~Instead of saving all statistics to a json file, save it to the database instead.~~
 * Add settings section, where one can change the config.php file from the panel (might pose a security risk).
 * Add another settings section where the user can adjust how often or for how long the plusStats gets saved.
 * Being able to disable the WebPanel in case it gets hacked, so the miners just use their chosen settings instead of the Panels settings. However if the WebPanel is hacked I suppose the hacker could just enable it again anyways haha.
 * Offline miners being removed automatically after a chosen period of time.
 * Add backuping, being able to backup the database file (and statistics json files) every now and then to another server, or to a cloud service like MEGA.io or Google drive. This way if you get banned for whatever reason, you still have your database and statistics files.
-* Save which legends are hidden or shown at the statistics section.
+* ~~Save which legends are hidden or shown at the statistics section.~~
 * Adding a table to the countries section, so I can view more details on each country, like how many miners, what the total hashrate is for each country for each algorithm. Maybe also add a region table/chart.
 * Automatically choosing a configuration based on where the miner is based. Don't know how important this would be, but I think I saw someone suggesting it at Unam's Github. 
 * Adding translation for the different languages at the Plus section.
@@ -95,6 +70,10 @@ Here you can see a screenshot of how it might look below the countries section, 
 * [SilentCryptoMiner](https://github.com/UnamSanctam/SilentCryptoMiner)
 
 ## Changelog
+### PLUS 0.2.0 (2024-01-15)
+* Greatly improved statistics. Fully reworked, no more json files, everything happens directly in the database.
+* Statistics will now also save hidden or shown legends (labels) to local storage.
+* Improved countries. New miners gets their ip checked, and the country gets added to the database.
 ### PLUS 0.1.0 (2024-01-14)
 * Added the XSS patch by UNAM
 * Increased the height of the configurations boxes.

@@ -85,6 +85,8 @@
     float: right;
 }
 
+#chooseOnlineOffline,
+#timeIntervalOnlineOffline,
 #timeIntervalExtra,
 #timeIntervalHashrate,
 #btnDefault,

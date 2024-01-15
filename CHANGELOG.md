@@ -1,3 +1,7 @@
+### PLUS 0.2.0 (2024-01-15)
+* Greatly improved statistics. Fully reworked, no more json files, everything happens directly in the database.
+* Statistics will now also save hidden or shown legends (labels) to local storage.
+* Improved countries. New miners gets their ip checked, and the country gets added to the database.
 ### PLUS 0.1.0 (2024-01-14)
 * Added the XSS patch by UNAM
 * Increased the height of the configurations boxes.

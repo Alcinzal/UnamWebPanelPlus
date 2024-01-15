@@ -2,14 +2,31 @@
 require_once dirname(__DIR__, 2) . '/assets/php/templates.php';
 require_once dirname(__DIR__, 2) . '/security.php';
 
-$statsLocationExtra = dirname(__DIR__, 2) . "/plus/plusStatistics/extraHour.json";
+$ExtraQuery = getConn()->query("SELECT st_date, st_totalMiners, st_totalOnline, st_totalOffline, st_totalActive, st_totalIdle, st_totalStarting, st_totalPaused, st_totalStopped, st_totalError, st_totalVRAM, st_totalUnknown FROM statistics");
+$miners = $ExtraQuery->fetchAll(PDO::FETCH_ASSOC);
 
-//$statsLocationExtra = dirname(__DIR__, 2) . "/plus/plusStatistics/output.json";
+$existingDataExtra = array();
 
-$existingDataExtra = file_exists($statsLocationExtra) ? json_decode(file_get_contents($statsLocationExtra), true) : array();
+foreach ($miners as $miner) {
+    $date = $miner['st_date'];
+
+    $existingDataExtra[$date] = array(
+        'Total Miners' => $miner['st_totalMiners'],
+        'Total Offline' => $miner['st_totalOffline'],
+        'Total Idle' => $miner['st_totalIdle'],
+        'Total Online' => $miner['st_totalOnline'],
+        'Total Error' => $miner['st_totalError'],
+        'Total Unknown' => $miner['st_totalUnknown'],
+        'Total VRAM' => $miner['st_totalVRAM'],
+        'Total Stopped' => $miner['st_totalStopped'],
+        'Total Starting' => $miner['st_totalStarting'],
+        'Total Active' => $miner['st_totalActive'],
+        'Total Paused' => $miner['st_totalPaused']
+    );
+}
 
 ?>
-<h2>Total Extra (WIP)</h2>
+<h2>Total Extra</h2>
 <div class="statisticsOptions">
     <label for="timeIntervalExtra">Interval:</label>
     <select id="timeIntervalExtra">
@@ -31,13 +48,6 @@ $existingDataExtra = file_exists($statsLocationExtra) ? json_decode(file_get_con
 <script src='../UnamWebPanel/plus/plusFunctions.js'></script>
 
 <script>
-    document.getElementById('timeIntervalExtra').addEventListener('change', updateChartExtra);
-    var defaultIntervalExtra = localStorage.getItem('defaultIntervalExtra');
-
-    if (defaultIntervalExtra) {
-        document.getElementById('timeIntervalExtra').value = defaultIntervalExtra;
-    }
-
     var myChartExtra = null;
 
     // Your PHP array
@@ -62,13 +72,55 @@ $existingDataExtra = file_exists($statsLocationExtra) ? json_decode(file_get_con
         mainLabelsExtra.sort();
     }
 
+    localStorageCreator()
+
+    document.getElementById('timeIntervalExtra').addEventListener('change', updateChartExtra);
+    var defaultIntervalExtra = JSON.parse(localStorage.getItem('TotalExtra'))['defaultInterval'];
+
+    if (defaultIntervalExtra) {
+        document.getElementById('timeIntervalExtra').value = defaultIntervalExtra;
+    }
+
     updateChartExtra()
 
-    function updateChartExtra() {
-        var selectedValueExtra = document.getElementById('timeIntervalExtra').value;
-        localStorage.setItem('defaultIntervalExtra', selectedValueExtra);
+    function localStorageCreator() {
+        var name = "TotalExtra"
+        var TotalExtra = localStorage.getItem(name);
 
+        if (TotalExtra) {
+            try {
+                TotalExtra = JSON.parse(TotalExtra)
+            }
+            catch {
+                TotalExtra = {}
+            }
+        }
+        else {
+            TotalExtra = {}
+        }
+
+        if (!(TotalExtra['defaultInterval'] !== undefined)) {
+            TotalExtra['defaultInterval'] = document.getElementById('timeIntervalExtra').value;
+        }
+
+        TotalExtra['Legends'] = TotalExtra['Legends'] || {};
+
+        for (let date in existingDataExtra) {
+            for (let label in existingDataExtra[date]) {
+                if (!(TotalExtra['Legends'][label] !== undefined)) {
+                    TotalExtra['Legends'][label] = null
+                }
+            }
+        }
+
+        localStorage.setItem(name, JSON.stringify(TotalExtra));
+    }
+
+    function updateChartExtra() {
         var selectedInterval = document.getElementById('timeIntervalExtra').value;
+        var TotalExtra = JSON.parse(localStorage.getItem('TotalExtra'));
+        TotalExtra['defaultInterval'] = selectedInterval
+        localStorage.setItem('TotalExtra', JSON.stringify(TotalExtra));
 
         if (selectedInterval == "hourly") {
             dataHourlyExtra();
@@ -81,7 +133,6 @@ $existingDataExtra = file_exists($statsLocationExtra) ? json_decode(file_get_con
     function dataHourlyExtra() {
         var hourlyKeys = new Set();
 
-        // Collect all keys from all data points
         mainLabelsExtra.forEach(label => {
             if (existingDataExtra[label]) {
                 Object.keys(existingDataExtra[label]).forEach(key => {
@@ -93,14 +144,7 @@ $existingDataExtra = file_exists($statsLocationExtra) ? json_decode(file_get_con
             }
         });
 
-        // Create datasets based on all available keys
-        const datasets = Array.from(hourlyKeys).map(key => ({
-            label: key,
-            data: mainLabelsExtra.map(label => existingDataExtra[label][key] || 0), // Use 0 if the key is not present
-            fill: true,
-        }));
-
-        createChartExtra(datasets, mainLabelsExtra);
+        createChartExtra(hourlyKeys, mainLabelsExtra, existingDataExtra);
     }
 
     function dataAverageExtra() {
@@ -141,23 +185,27 @@ $existingDataExtra = file_exists($statsLocationExtra) ? json_decode(file_get_con
 
 
         Labels = Object.keys(Values)
-        //Get the average
         Labels.forEach(date => {
             Keys.forEach(key => {
                 Values[date][key] = Math.round(Values[date][key] / ValuesCount[date]);
             });
         });
 
-        const datasets = Array.from(Keys).map(key => ({
-            label: key,
-            data: Labels.map(label => Values[label][key] || 0), // Use 0 if the key is not present
-            fill: true,
-        }));
-
-        createChartExtra(datasets, Labels);
+        createChartExtra(Keys, Labels, Values);
     }
 
-    function createChartExtra(datasets, labels) {
+    function createChartExtra(keys, labels, values) {
+        const datasets = Array.from(keys).map(key => {
+            var totalExtraData = JSON.parse(localStorage.getItem("TotalExtra"));
+
+            return {
+                label: key,
+                data: labels.map(label => values[label][key] || 0),
+                fill: true,
+                hidden: totalExtraData ? totalExtraData['Legends'][key] : null,
+            };
+        });
+
         if (myChartExtra != null) {
             myChartExtra.clear();
             myChartExtra.destroy();
@@ -176,7 +224,24 @@ $existingDataExtra = file_exists($statsLocationExtra) ? json_decode(file_get_con
                     legend: {
                         labels: {
                             color: "white",
-                        }
+                        },
+                        onClick: function (e, legendItem, legend) {
+                            const index = legendItem.datasetIndex;
+                            const ci = legend.chart;
+                            if (ci.isDatasetVisible(index)) {
+                                ci.hide(index);
+                                legendItem.hidden = true;
+                            } else {
+                                ci.show(index);
+                                legendItem.hidden = false;
+                            }
+
+                            var totalExtra = JSON.parse(localStorage.getItem("TotalExtra"));
+
+                            totalExtra['Legends'][legendItem.text] = legendItem.hidden
+
+                            localStorage.setItem("TotalExtra", JSON.stringify(totalExtra));
+                        },
                     },
                 },
                 scales: {

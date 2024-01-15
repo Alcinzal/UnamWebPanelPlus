@@ -25,6 +25,10 @@
                         'db_column'=>'ip',
                         'display'=>'IP'
                     ],
+                    'country'=>[
+                        'db_column'=>'country',
+                        'display'=>$larr['Country']
+                    ],
                     'stealthfound'=>[
                         'db_column'=>'stealthfound',
                         'hidden'=>true

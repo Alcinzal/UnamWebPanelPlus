@@ -8,9 +8,7 @@ $timestamp = time();
 echo '<html>
             <head>
                 <link rel="stylesheet" href="plus/plus.css?timestamp='.$timestamp.'">
-                <title>Total Hashrate</title>
-                <script src="assets/modules/chartjs/chart.umd.js"></script>
-                <script src="assets/modules/chartjs/chartjs-adapter-date-fns.bundle.min.js"></script>
+                <script src="../UnamWebPanel/plus/plusFunctions.js?timestamp='.$timestamp.'"></script>
             </head>
             <body>';
 
@@ -42,5 +40,3 @@ include("plus/countries/countries.php");
 
 // HTML END
 echo '</body></html>';
-
-?>

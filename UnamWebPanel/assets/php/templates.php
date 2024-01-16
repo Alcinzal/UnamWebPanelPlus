@@ -40,7 +40,6 @@ function generalCSSIncludes(){
             <link rel='stylesheet' href='assets/modules/datatables-responsive/css/responsive.bootstrap4.min.css'>
             <link rel='stylesheet' href='assets/modules/datatables-buttons/css/buttons.bootstrap4.min.css'>
             <link rel='stylesheet' href='assets/css/adminlte.min.css'>
-            <link rel='stylesheet' href='assets/css/bootstrap.custom.css'>
             <link rel='stylesheet' href='assets/css/custom.css'>";
 }
 

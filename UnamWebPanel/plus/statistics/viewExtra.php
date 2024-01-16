@@ -1,5 +1,4 @@
 <?php
-require_once dirname(__DIR__, 2) . '/assets/php/templates.php';
 require_once dirname(__DIR__, 2) . '/security.php';
 
 $ExtraQuery = getConn()->query("SELECT st_date, st_totalMiners, st_totalOnline, st_totalOffline, st_totalActive, st_totalIdle, st_totalStarting, st_totalPaused, st_totalStopped, st_totalError, st_totalVRAM, st_totalUnknown FROM statistics");
@@ -43,9 +42,6 @@ foreach ($miners as $miner) {
 <div style="background-color:#343a40;">
     <canvas id="chartExtra"></canvas>
 </div>
-
-<script src='../UnamWebPanel/assets/modules/chartjs/chart.umd.js'></script>
-<script src='../UnamWebPanel/plus/plusFunctions.js'></script>
 
 <script>
     var myChartExtra = null;

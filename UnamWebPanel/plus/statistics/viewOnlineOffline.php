@@ -1,5 +1,4 @@
 <?php
-require_once dirname(__DIR__, 2) . '/assets/php/templates.php';
 require_once dirname(__DIR__, 2) . '/security.php';
 
 $OnlineOfflineQuery = getConn()->query("SELECT st_date, st_onlineMiners, st_offlineMiners FROM statistics");
@@ -47,9 +46,6 @@ foreach ($miners as $miner) {
 <div style="background-color:#343a40;">
     <canvas id="chartOnlineOffline"></canvas>
 </div>
-
-<script src='../UnamWebPanel/assets/modules/chartjs/chart.umd.js'></script>
-<script src='../UnamWebPanel/plus/plusFunctions.js'></script>
 
 <script>
     var myChartOnlineOffline = null;

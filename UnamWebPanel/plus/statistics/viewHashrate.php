@@ -1,5 +1,4 @@
 <?php
-require_once dirname(__DIR__, 2) . '/assets/php/templates.php';
 require_once dirname(__DIR__, 2) . '/security.php';
 
 $hashrateQuery = getConn()->query("SELECT st_date, st_hashrate FROM statistics");
@@ -34,9 +33,6 @@ foreach ($miners as $miner) {
 <div style="background-color:#343a40;">
     <canvas id="chartHashrate"></canvas>
 </div>
-
-<script src='../UnamWebPanel/assets/modules/chartjs/chart.umd.js'></script>
-<script src='../UnamWebPanel/plus/plusFunctions.js'></script>
 
 <script>
     var myChartHashrate = null;

@@ -105,11 +105,9 @@ echo unamtSection($larr['Configurations'],
             function loadConfig() {
                 selected = document.getElementById("selectExampleConfig").value
                 if (selected == "1") {
-                    console.log(selected)
                     document.getElementById("textareaExample").innerHTML = JSON.stringify(xmrExampleConfig, null, 4)
                 }
                 else if (selected == "2") {
-                    console.log(selected)
                     document.getElementById("textareaExample").innerHTML = JSON.stringify(ethExampleConfig, null, 4)
                 }
             }

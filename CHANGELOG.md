@@ -1,3 +1,8 @@
+### PLUS 0.2.5 (2024-01-16)
+* Fixed bug where statistics graphs would disappear.
+* Fixed the charts not updating when the resizing the browser.
+* Optimized code a little to not call the same files multiple times.
+* Fixed non-existent file being called.
 ### PLUS 0.2.0 (2024-01-15)
 * Greatly improved statistics. Fully reworked, no more json files, everything happens directly in the database.
 * Statistics will now also save hidden or shown legends (labels) to local storage.

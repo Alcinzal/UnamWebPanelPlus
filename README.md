@@ -1,48 +1,32 @@
-# UnamWebPanelPlus v0.2.0
+# UnamWebPanelPlus v0.2.5
 
-This is a modified version of Unam's [UnamWebPanel](https://github.com/UnamSanctam/UnamWebPanel).
+A modified version of Unam's [UnamWebPanel](https://github.com/UnamSanctam/UnamWebPanel).
 
-## What is different?
+## Differences
 
-### General
+### Main
 
+* Lifetime statistics - Statistics are saved every hour forever. You can view the statistics and toggle between viewing the data hourly, daily, weekly or monthly.
+* Countries - See which country your miners are from, both in the table and in a pie chart.
+* Total Hashrate - An overview of each algorithm, and their total hashrate, online miners and their average hashrate.
+* Example configurations - View examples in the configurations page to better understand what settings are available. (In the future the whole configuration page will get reworked to ensure ease of use)
+* More to come!
+
+### Other
 * Added the XSS patch from https://github.com/UnamSanctam/UnamWebPanel/issues/317#issuecomment-1884683799
-* Database is different, includes a statistics table and a country column in the miners table.
 
-### Miners
-* Added a country column
+### Video (Outdated)
 
-### Configurations
-* Increased the height of the configurations boxes.
-* Added an examples box, so users can easily view how a configuration should look like. (Might be missing some options)
-
-### Plus
-* Added Plus page
-* Total hashrate section. View the current hashrates, current miners for each hashrate, and average hashrate per miner.
-* Statistics sections. Here you can view hourly data for Hashrate, Total Miners, Total Online miners, etc. You can also choose between viewing the data hourly, daily, weekly or monthly.
-* Countries section. Here you get to view a pie chart of the amount of miners from each country.
-
-### Video
-
-I have a video showcasing the panel. Statistics pages is unchanged. The IP addresses shown in the video are fake, it's only testing data. Here is the video, sorry for the flickering:
-(this video is outdated)
+The following video is outdated, however it still looks pretty similar. The IP addresses shown in the video are fake, it's only testing data. Here is the video, sorry for the flickering:
 
 https://github.com/Alcinzal/UnamWebPanelPlus/assets/153958388/03144cbe-210d-443a-a33c-0dafddeb7eec
-
-## Why/How?
-
-### Statistics
-A PHP file that saves the statistics gets called each time the endpoint gets called. This saves the current data to the database. The PHP file will write the data to the current hour, meaning that data saved 12:03 will get overwritten by data saved 12:50. This is to prevent large buildups of data. So I guess one could say that the data gets saved hourly. When choosing the intervals between daily, weekly and monthly, it simply takes the values and gets the average of them, it also saves the chosen interval and hidden/shown legends(labels) to local storage.
-
-### Countries
-To find which country the miners are from, https://country.is/ is used. Usage is simply: https://api.country.is/8.8.8.8. The country only gets checked if the miner does not exist in the database, aka it's a new miner.
 
 ## What needs to be worked on?
 
 ### Bugs
-* When visting between the Plus page and the Statistics page, the charts at Statistics disappear until you refresh the page.
+* ~~When visting between the Plus page and the Statistics page, the charts at Statistics disappear until you refresh the page.~~
 * The charts at the plus statistics section will sometimes say that the end of the year is week 1, but it should say week 52 or 53.
-* The charts dont update when resizing the browser window.
+* ~~The charts dont update when resizing the browser window.~~
 * ~~IMPORTANT: The JSON files are available to whoever visits them directly.~~ 
 
 ### Ideas
@@ -63,15 +47,16 @@ Here are some ideas, brainstorming I guess, so some of them might be dumb or use
 * Adding an advanced page, where you can add miners/data to the database, for testing.
 * Adding a update section, where you can check for updates from the github, and if there is a new update it updates it automatically.
 
-Here you can see a screenshot of how it might look below the countries section, if I ever complete it.
-![image](https://github.com/Alcinzal/UnamWebPanelPlus/assets/153958388/36d8684d-bdac-43dc-b569-a2dcc3ad7d2f)
-
-
 ## Supported Projects
 
 * [SilentCryptoMiner](https://github.com/UnamSanctam/SilentCryptoMiner)
 
 ## Changelog
+### PLUS 0.2.5 (2024-01-16)
+* Fixed bug where statistics graphs would disappear.
+* Fixed the charts not updating when the resizing the browser.
+* Optimized code a little to not call the same files multiple times.
+* Fixed non-existent file being called.
 ### PLUS 0.2.0 (2024-01-15)
 * Greatly improved statistics. Fully reworked, no more json files, everything happens directly in the database.
 * Statistics will now also save hidden or shown legends (labels) to local storage.
@@ -115,16 +100,6 @@ Here you can see a screenshot of how it might look below the countries section, 
 * Changed endpoint text when the request isn't from the miner to reduce confusion
 * Changed string sanitation away from FILTER_SANITIZE_STRING due to PHP 8.1 deprication
 * Moved database to its own folder to allow for broader database file blocks
-### 1.5.0 (01/05/2022)
-* Added new field "Version" that shows the miner version
-* Added new field "Active Window" that shows the currently active foreground windows title
-* Added new field "Run Time" that shows how long the current session of the miner has been running for
-* Added "First Connection" field that shows the date and time when the miner first connected
-* Added new miner statuses "Starting" and "Error"
-* Added text next to the "Offline" status that shows how long the miner has been offline
-* Added error text when an XMR miner cannot connect to its pool
-* Added German and French datatable translation files
-* Fixed miner table ordering
 
 [You can view the full Changelog here](CHANGELOG.md)
 

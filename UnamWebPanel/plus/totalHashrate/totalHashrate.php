@@ -1,6 +1,11 @@
 <?php
 require_once dirname(__DIR__, 2) . '/security.php';
 
+$hashrateQuery = getConn()->query("SELECT ms_algorithm, ms_hashrate, ms_lastConnection, ms_status FROM miners");
+$miners = $hashrateQuery->fetchAll(PDO::FETCH_ASSOC);
+
+$algorithms = array_unique(array_column($miners, 'ms_algorithm'));
+
 function calculateTotalHashrate($algorithm, $miners)
 {
     $informationAlgorithms = array();
@@ -11,11 +16,10 @@ function calculateTotalHashrate($algorithm, $miners)
 
     foreach ($miners as $miner) {
         if ($miner['ms_algorithm'] === $algorithm) {
-            // Check if the last connection was less than 3 minutes ago
-            $lastConnection = strtotime($miner['ms_lastConnection']);
+            $lastConnection = $miner['ms_lastConnection'];
             $currentTime = time();
 
-            if ($currentTime - $lastConnection < 180 && $miner['ms_status'] == 2) {
+            if ($currentTime - $lastConnection < 180 && ($miner['ms_status'] == 2 || $miner['ms_status'] == 3)) {
                 $totalHashrate += $miner['ms_hashrate'];
                 $totalMiners += 1;
             }
@@ -35,15 +39,7 @@ function calculateTotalHashrate($algorithm, $miners)
     return $informationAlgorithms;
 }
 
-// Query to get hashrate information from miners table
-$hashrateQuery = getConn()->query("SELECT ms_algorithm, ms_hashrate, ms_lastConnection, ms_status FROM miners");
-$miners = $hashrateQuery->fetchAll(PDO::FETCH_ASSOC);
-
-// Get unique algorithms
-$algorithms = array_unique(array_column($miners, 'ms_algorithm'));
-
-
-echo '<div class="algorithm-section">';
+echo '<div class="plus-section">';
 
 if($algorithms)
 {
@@ -66,7 +62,7 @@ if($algorithms)
 }
 else 
 {   
-    echo '<div class="algorithm-box">
+    echo '<div class="plus-box">
     <div class="algorithm-header">
     <h2>No algorithms found</h2>
     </div>

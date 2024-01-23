@@ -85,13 +85,18 @@
     float: right;
 }
 
+/*
 #chartHashrate,
 #chartExtra,
 #chartOnlineOffline,
-#chartCountries {
+#chartCountriesTotal,
+#chartCountriesActive,
+#chartContinentsTotal,
+#chartContinentsActive {
     width: 100% !important;
     height: 100% !important;
 }
+*/
 
 #chooseOnlineOffline,
 #timeIntervalOnlineOffline,
@@ -145,3 +150,12 @@
     opacity: 1;
 }
 
+@media only screen and (max-width: 800px) {
+    .plus-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .statistics-section {
+        grid-template-columns: repeat(1, 1fr);
+    }
+  }

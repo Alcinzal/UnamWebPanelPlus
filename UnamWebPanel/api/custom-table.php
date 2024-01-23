@@ -46,7 +46,7 @@ switch (getParam('method')) {
                 $options['db_where'][] = [
                     'db_column' => 'ms_lastConnection',
                     'db_operation' => '>',
-                    'db_value' => date('Y-m-d H:i:s', strtotime('-3 minutes'))];
+                    'db_value' => strtotime('-3 minutes')];
             }
         }
         break;

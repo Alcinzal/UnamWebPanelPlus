@@ -40,7 +40,7 @@ $miners = $minerscon->fetchAll(PDO::FETCH_ASSOC);
 
 foreach($miners as $miner) {
     $stats['total']++;
-    if($miner['ms_lastConnection'] && (strtotime($currentDate) - strtotime($miner['ms_lastConnection'])) > 180){
+    if($miner['ms_lastConnection'] && (strtotime($currentDate) - $miner['ms_lastConnection']) > 180){
         $stats['offline']++;
     }else{
         $key = 'status_'.$miner['ms_status'];
@@ -55,7 +55,7 @@ foreach($miners as $miner) {
         $cpus[$cpu] = isset($cpus[$cpu]) ? $cpus[$cpu]+1 : 1;
     }
     foreach($newminers as &$newminer) {
-        if($miner['ms_creationDate'] && (strtotime($currentDate) - strtotime($miner['ms_creationDate'])) < $newminer[0]){
+        if($miner['ms_creationDate'] && (strtotime($currentDate) - $miner['ms_creationDate']) < $newminer[0]){
             $newminer[1]++;
         }
     }

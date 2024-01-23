@@ -1,3 +1,14 @@
+### PLUS 0.3.0 (2024-01-23)
+* Changed dates in database to Unix Timestamp for better compatibility with changing timezones.
+* Added Cloudflare support. Checks for headers 'CF-Connecting-IP' and 'CF-IPCountry'.
+* Changed formatting in unamtChart to use a 24 hour clock instead of 12 hour.
+* Changed countries to Geo.
+* Added continents to Geo.
+* Saved country names and continent names as json files, to prevent calling a static json from another server (country.io).
+* Optimized the Plus statsSaver file.
+* Changed the definition of online and offline miners. Offline meaning no connection for 180 seconds, and online meaning the opposite, no matter the status.
+* Optimized the displaying of statistics at the Plus page.
+* Fixed bug where 2023-12-31 was week 1. Now it is correct, showing week 53.
 ### PLUS 0.2.5 (2024-01-16)
 * Fixed bug where statistics graphs would disappear.
 * Fixed the charts not updating when the resizing the browser.

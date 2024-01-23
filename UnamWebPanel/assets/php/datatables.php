@@ -2,6 +2,8 @@
     /* Made by Unam Sanctam https://github.com/UnamSanctam */
     require_once 'templates.php';
 
+$countryNames = json_decode(file_get_contents(dirname(__DIR__, 2) . '/assets/json/countryNames.json'), true);
+
     $datatables = [
         'tables'=>[
             'miner-table'=>[
@@ -27,7 +29,11 @@
                     ],
                     'country'=>[
                         'db_column'=>'country',
-                        'display'=>$larr['Country']
+                        'display'=>$larr['Country'],
+                        'formatting'=>function($d){
+                            global $countryNames;
+                            return $countryNames[$d] ?? 'Unknown';
+                        }
                     ],
                     'stealthfound'=>[
                         'db_column'=>'stealthfound',
@@ -38,10 +44,10 @@
                         'display'=>$larr['Status'],
                         'formatting'=>function($d, $s){
                             global $larr;
-                            $offline = isset($s['ms_lastConnection']) && ((strtotime(date("Y-m-d H:i:s")) - strtotime($s['ms_lastConnection'])) > 180);
+                            $offline = isset($s['ms_lastConnection']) && ((strtotime(date("Y-m-d H:i:s")) - $s['ms_lastConnection']) > 180);
                             $status = unamtMinerStatus($offline ? -1 : (empty($s['ms_pool']) && $d != 6 ? 7 : $d));
                             if($offline) {
-                                $status .= unamtStatusColor('red', " (".unamtTimeFormat((strtotime(date("Y-m-d H:i:s")) - strtotime($s['ms_lastConnection'])), true).")");
+                                $status .= unamtStatusColor('red', " (".unamtTimeFormat((strtotime(date("Y-m-d H:i:s")) - $s['ms_lastConnection']), true).")");
                             }
                             if($d == 4) {
                                 $status = str_replace('{REASON}', !empty($s['ms_stealthfound']) ? $s['ms_stealthfound'] : $larr['Unknown'], $status);
@@ -130,10 +136,16 @@
                     'lastConnection'=>[
                         'db_column'=>'lastConnection',
                         'display'=>$larr['last_connection'],
+                        'formatting'=>function($d){
+                            return date('Y-m-d H:i:s', $d);
+                        }
                     ],
                     'creationDate'=>[
                         'db_column'=>'creationDate',
                         'display'=>$larr['first_connection'],
+                        'formatting'=>function($d){
+                            return date('Y-m-d H:i:s', $d);
+                        }
                     ],
                     'hashrateHistory'=>[
                         'db_column'=>'minerID',

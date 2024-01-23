@@ -40,7 +40,8 @@ function generalCSSIncludes(){
             <link rel='stylesheet' href='assets/modules/datatables-responsive/css/responsive.bootstrap4.min.css'>
             <link rel='stylesheet' href='assets/modules/datatables-buttons/css/buttons.bootstrap4.min.css'>
             <link rel='stylesheet' href='assets/css/adminlte.min.css'>
-            <link rel='stylesheet' href='assets/css/custom.css'>";
+            <link rel='stylesheet' href='assets/css/custom.css'>
+            <link rel='stylesheet' href='plus/plus.css'>";
 }
 
 function unamtFormGroup($content, $options=[]){
@@ -240,7 +241,7 @@ function unamtChart($charttype, $chartconfig){
 }
 
 function templateHashrateChart($label, $data) {
-    return unamtChart('hashrate', json_encode(['type'=>'bar', 'data'=>['datasets'=>[['label'=>$label, 'data'=>$data, 'fill'=>true]]], 'options'=>['responsive'=>true, 'scales'=>['x'=>['type'=>'time', 'max'=>date('Y-m-d H:i:00'), 'min'=>$data[0]['x'], 'time'=>['minUnit'=>'minute']], 'y'=>['ticks'=>['callback'=>''], 'min'=>0]]]]));
+    return unamtChart('hashrate', json_encode(['type'=>'bar', 'data'=>['datasets'=>[['label'=>$label, 'data'=>$data, 'fill'=>true]]], 'options'=>['responsive'=>true, 'scales'=>['x'=>['type'=>'time', 'max'=>date('Y-m-d H:i:00'), 'min'=>$data[0]['x'], 'time'=>['minUnit'=>'minute', 'tooltipFormat'=>'yyyy-MM-dd HH:mm:ss', 'displayFormats'=>['minute'=>'HH:mm', 'hour'=>'HH:mm']]], 'y'=>['ticks'=>['callback'=>''], 'min'=>0]]]]));
 }
 
 function templateDatatableTool($text, $checked, $options){

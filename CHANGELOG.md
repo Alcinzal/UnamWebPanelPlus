@@ -1,3 +1,7 @@
+### PLUG 0.3.5 (2024-01-31)
+* Added character limit to algorithms so XSS attempts do not go through.
+* Fixed small bug where statistics would throw an error if there was no statistics data.
+* Changed total hashrate cards so yellow means active miners but no hashrate, and green means active miners with hashrate.
 ### PLUS 0.3.0 (2024-01-23)
 * Changed dates in database to Unix Timestamp for better compatibility with changing timezones.
 * Added Cloudflare support. Checks for headers 'CF-Connecting-IP' and 'CF-IPCountry'.

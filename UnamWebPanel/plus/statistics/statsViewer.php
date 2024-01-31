@@ -41,7 +41,7 @@ foreach ($stats as $stat) {
 
 ksort($statsDataTime);
 
-$statsFirstTime = array_keys($statsDataTime)[0];
+$statsFirstTime = array_keys($statsDataTime)[0] ?? strtotime(date("Y-m-d H:00:00"));
 $currentHour = strtotime(date("Y-m-d H:00:00"));
 
 if ($statsFirstTime) {

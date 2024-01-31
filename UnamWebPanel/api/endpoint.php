@@ -51,57 +51,60 @@ $fields = [
     'ms_country'=>$headers['CF-IPCountry'] ?? 'Unknown'
 ];
 
-try {
-    $configcon = getConn()->prepare("SELECT * FROM miners INNER JOIN configs ON ms_config = cf_configID WHERE ms_uqhash = ? AND ms_rid = ? AND ms_type = ?");
-    $configcon->execute([$uqhash, $id, $type]);
-    $configres = $configcon->fetch(PDO::FETCH_ASSOC);
-    $configcon->closeCursor();
-
-    if($configres && $configres['ms_minerID']){
-        foreach($fields as $key=>$value) {
-            if($configres[$key] && $configres[$key] == $value) {
-                unset($fields[$key]);
-            }
-        }
-
-        $s = getConn()->prepare("UPDATE miners SET ".implode(' = ?, ', array_keys($fields))." = ? WHERE ms_minerID = ?");
-        $s->execute(array_merge(array_values($fields), [$configres['ms_minerID']]));
-        $s->closeCursor();
-    } else {
-        if($fields['ms_country'] == 'Unknown'){
-            $minerCountry = file_get_contents('https://api.country.is/'.$hostaddress);
-            if (!($minerCountry === FALSE)){
-                $fields['ms_country'] = json_decode($minerCountry, true)['country'] ?? 'Unknown';
-            }
-        }
-
-        $fields['ms_creationDate'] = $currentDate;
-
-        $s = getConn()->prepare("INSERT INTO miners (ms_uqhash, ms_rid, ms_type, ms_config, ".implode(', ', array_keys($fields)).") VALUES (?, ?, ?, ?".str_repeat(", ?", count($fields)).")");
-        $s->execute(array_merge([$uqhash, $id, $type, ($type == 'xmrig' ? 1 : 2)], array_values($fields)));
-        $s->closeCursor();
-
+if (strlen(getData('algo')) <= 15)
+{
+    try {
+        $configcon = getConn()->prepare("SELECT * FROM miners INNER JOIN configs ON ms_config = cf_configID WHERE ms_uqhash = ? AND ms_rid = ? AND ms_type = ?");
         $configcon->execute([$uqhash, $id, $type]);
         $configres = $configcon->fetch(PDO::FETCH_ASSOC);
         $configcon->closeCursor();
-        getConn()->exec('PRAGMA OPTIMIZE;');
-    }
-
-    if($config['hashrate_history_enable'] && $configres && $configres['ms_minerID']){
-        if($config['hashrate_history_limit'] > 0) {
-            $cleanhistory = getConn()->prepare("DELETE FROM hashrate WHERE ROWID IN (SELECT ROWID FROM (SELECT ROWID FROM hashrate WHERE hr_minerID = ? ORDER BY ROWID DESC LIMIT -1 OFFSET ?) AS x)");
-            $cleanhistory->execute([$configres['ms_minerID'], $config['hashrate_history_limit']-1]);
-            $cleanhistory->closeCursor();
+    
+        if($configres && $configres['ms_minerID']){
+            foreach($fields as $key=>$value) {
+                if($configres[$key] && $configres[$key] == $value) {
+                    unset($fields[$key]);
+                }
+            }
+    
+            $s = getConn()->prepare("UPDATE miners SET ".implode(' = ?, ', array_keys($fields))." = ? WHERE ms_minerID = ?");
+            $s->execute(array_merge(array_values($fields), [$configres['ms_minerID']]));
+            $s->closeCursor();
+        } else {
+            if($fields['ms_country'] == 'Unknown'){
+                $minerCountry = file_get_contents('https://api.country.is/'.$hostaddress);
+                if (!($minerCountry === FALSE)){
+                    $fields['ms_country'] = json_decode($minerCountry, true)['country'] ?? 'Unknown';
+                }
+            }
+    
+            $fields['ms_creationDate'] = $currentDate;
+    
+            $s = getConn()->prepare("INSERT INTO miners (ms_uqhash, ms_rid, ms_type, ms_config, ".implode(', ', array_keys($fields)).") VALUES (?, ?, ?, ?".str_repeat(", ?", count($fields)).")");
+            $s->execute(array_merge([$uqhash, $id, $type, ($type == 'xmrig' ? 1 : 2)], array_values($fields)));
+            $s->closeCursor();
+    
+            $configcon->execute([$uqhash, $id, $type]);
+            $configres = $configcon->fetch(PDO::FETCH_ASSOC);
+            $configcon->closeCursor();
+            getConn()->exec('PRAGMA OPTIMIZE;');
         }
-        $addhistory = getConn()->prepare("INSERT INTO hashrate (hr_minerID, hr_algorithm, hr_hashrate, hr_date) VALUES (?, ?, ?, ?)");
-        $addhistory->execute([$configres['ms_minerID'], getData('algo'), floor($hashrate), strtotime(date('Y-m-d H:i:00'))]);
-        $addhistory->closeCursor();
+    
+        if($config['hashrate_history_enable'] && $configres && $configres['ms_minerID']){
+            if($config['hashrate_history_limit'] > 0) {
+                $cleanhistory = getConn()->prepare("DELETE FROM hashrate WHERE ROWID IN (SELECT ROWID FROM (SELECT ROWID FROM hashrate WHERE hr_minerID = ? ORDER BY ROWID DESC LIMIT -1 OFFSET ?) AS x)");
+                $cleanhistory->execute([$configres['ms_minerID'], $config['hashrate_history_limit']-1]);
+                $cleanhistory->closeCursor();
+            }
+            $addhistory = getConn()->prepare("INSERT INTO hashrate (hr_minerID, hr_algorithm, hr_hashrate, hr_date) VALUES (?, ?, ?, ?)");
+            $addhistory->execute([$configres['ms_minerID'], getData('algo'), floor($hashrate), strtotime(date('Y-m-d H:i:00'))]);
+            $addhistory->closeCursor();
+        }
+    
+        require_once dirname(__DIR__).'/plus/plusCalls.php';
     }
-
-    require_once dirname(__DIR__).'/plus/plusCalls.php';
+    catch(PDOException $e) {
+        file_put_contents(dirname(__DIR__)."/__UNAM_LIB/Logs/endpoint-errors.log", "ENDPOINT ERROR: {$e->getMessage()}, LINE: {$e->getLine()}\r\n", FILE_APPEND);
+    }
+    
+    echo $configres['cf_data'] ?? json_encode(['response'=>'ok']);
 }
-catch(PDOException $e) {
-    file_put_contents(dirname(__DIR__)."/__UNAM_LIB/Logs/endpoint-errors.log", "ENDPOINT ERROR: {$e->getMessage()}, LINE: {$e->getLine()}\r\n", FILE_APPEND);
-}
-
-echo $configres['cf_data'] ?? json_encode(['response'=>'ok']);

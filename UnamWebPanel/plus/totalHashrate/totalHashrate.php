@@ -46,15 +46,17 @@ if($algorithms)
     foreach ($algorithms as $algorithm) {
         $informationAlgorithms = calculateTotalHashrate($algorithm, $miners);
     
-        $isActive = ($informationAlgorithms[0] > 0) ? ' isActive' : '';
+        $isHashrate = ($informationAlgorithms[0] > 0) ? ' isHashrate' : '';
     
-        echo '<div class="algorithm-box' . $isActive . '">
+        $isMiners = ($informationAlgorithms[1] > 0) ? ' isMiners' : '';
+
+        echo '<div class="algorithm-box' . $isHashrate . $isMiners . '">
                     <div class="algorithm-header">
                     <h2>' . $algorithm . '</h2>
                     </div>
                     <div class="algorithm-footer">
                     <p>Total Hashrate: ' . unamtFormatHashrate($informationAlgorithms[0]) . '</p>
-                    <p>Total Miners: ' . $informationAlgorithms[1] . '</p>
+                    <p>Total Active + Idle: ' . $informationAlgorithms[1] . '</p>
                     <p>Average per miner: ' . unamtFormatHashrate($informationAlgorithms[2]) . '</p>
                     </div>
                   </div>';
@@ -68,7 +70,7 @@ else
     </div>
     <div class="algorithm-footer">
     <p>Total Hashrate: ' . unamtFormatHashrate(0) . '</p>
-    <p>Total Miners: ' . 0 . '</p>
+    <p>Total Active + Idle: ' . 0 . '</p>
     <p>Average per miner: ' . unamtFormatHashrate(0) . '</p>
     </div>
   </div>';

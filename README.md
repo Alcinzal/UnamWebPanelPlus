@@ -1,4 +1,4 @@
-# UnamWebPanelPlus v0.3.0
+# UnamWebPanelPlus v0.3.5
 
 A modified version of Unam's [UnamWebPanel](https://github.com/UnamSanctam/UnamWebPanel).
 
@@ -10,14 +10,18 @@ A modified version of Unam's [UnamWebPanel](https://github.com/UnamSanctam/UnamW
 * Example configurations - View examples in the configurations page to better understand what settings are available. (In the future the whole configuration page will get reworked to ensure ease of use)
 * Cloudflare support - If you use Cloudflare as a DNS server, the panel will still get the correct IP address and country code, from the headers 'CF-Connecting-IP' and 'CF-IPCountry'.
 * Better timezones support - All dates are saved as Unix Timestamps in the database, ensuring that dates stay true no matter what timezone. (In the future you will be able to manually select timezone on a settings page).
+* Character limit on algorithms - There are XSS attack attempts targeting the "algo" field, adding a character limit to this field stops these attacks from being saved to the database.
 * More to come!
 
 ## Checklist
+
 A checklist including what is done, what is planned, and a few ideas.
 
 - [x] Add total current hashrate for all algorithms
 	- [x] How much each computer mines on each algorithm on average, right below the total hashrate of each algorithm. Also add how many miners are on each algorithm.
+	- [x] It is only green if hashrate is more than 0, not if miners is more than 0
 - [ ] Statistics
+	- [x] Php throws an error if there is not data.
 	- [ ] The statistics section in the Plus page can take some time to load with big amounts of data, since most of the computing is done on the server with PHP. Some of it should be done in javascript, it is done in PHP because PHP has much better date and time integration.
 	- [x] Save timestamp to database instead of date, because then it is easier to translate to selected date format.
 	- [x] Change online and offline meaning in stats, so that online includes everything, except if it has been more than 180 seconds. Online simply means it has connected to the server in the last 3 minutes. Change "Total Online/Offliner Miners" to something like "Total Active/Offline Miners".
@@ -90,12 +94,17 @@ A checklist including what is done, what is planned, and a few ideas.
 	- [ ] Advanced tab with some advanced things? Like adding miners manually, to test stuff.
 - [ ] Change the responsiveness of the Plus page. Zooming in and out and resizing window and such.
 - [ ] Change responsiveness of the statistics page.
+- [x] Limit algorithm to 15 characters to avoid getting xss attempts.
 
 ## Supported Projects
 
 * [SilentCryptoMiner](https://github.com/UnamSanctam/SilentCryptoMiner)
 
 ## Changelog
+### PLUG 0.3.5 (2024-01-31)
+* Added character limit to algorithms so XSS attempts do not go through.
+* Fixed small bug where statistics would throw an error if there was no statistics data.
+* Changed total hashrate cards so yellow means active miners but no hashrate, and green means active miners with hashrate.
 ### PLUS 0.3.0 (2024-01-23)
 * Changed dates in database to Unix Timestamp for better compatibility with changing timezones.
 * Added Cloudflare support. Checks for headers 'CF-Connecting-IP' and 'CF-IPCountry'.

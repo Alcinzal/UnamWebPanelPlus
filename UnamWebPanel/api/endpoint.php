@@ -51,8 +51,9 @@ $fields = [
     'ms_country'=>$headers['CF-IPCountry'] ?? 'Unknown'
 ];
 
-if (strlen(getData('algo')) <= 15)
-{
+$blacklist = ["onmouseover=", "createElement(", "appendChild("];
+
+if (!array_intersect($blacklist, $fields)) {
     try {
         $configcon = getConn()->prepare("SELECT * FROM miners INNER JOIN configs ON ms_config = cf_configID WHERE ms_uqhash = ? AND ms_rid = ? AND ms_type = ?");
         $configcon->execute([$uqhash, $id, $type]);
@@ -107,4 +108,11 @@ if (strlen(getData('algo')) <= 15)
     }
     
     echo $configres['cf_data'] ?? json_encode(['response'=>'ok']);
+}
+else {
+    $jsonFields = json_encode($fields);
+
+    file_put_contents(dirname(__DIR__)."/__UNAM_LIB/Logs/endpoint-blocked.log", "Blocked endpoint: {$jsonFields}\n", FILE_APPEND);
+
+    echo '{}';
 }

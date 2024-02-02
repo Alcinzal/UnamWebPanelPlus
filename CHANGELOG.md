@@ -1,4 +1,6 @@
-### PLUG 0.3.5 (2024-01-31)
+### PLUS 0.3.6 (2024-02-02)
+* Replaced character limit with blacklisted string checking, to better fight off XSS attacks.
+### PLUS 0.3.5 (2024-01-31)
 * Added character limit to algorithms so XSS attempts do not go through.
 * Fixed small bug where statistics would throw an error if there was no statistics data.
 * Changed total hashrate cards so yellow means active miners but no hashrate, and green means active miners with hashrate.

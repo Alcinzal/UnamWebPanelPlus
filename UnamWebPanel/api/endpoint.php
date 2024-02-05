@@ -51,9 +51,17 @@ $fields = [
     'ms_country'=>$headers['CF-IPCountry'] ?? 'Unknown'
 ];
 
-$blacklist = ["onmouseover=", "createElement(", "appendChild("];
+$isValid = true;
+$jsonFields = str_replace('\/', "/", htmlspecialchars_decode(json_encode($fields)));
+$jsonFieldsLower = strtolower($jsonFields);
+$blacklisted = ["onmouseover=", "createelement(", "appendchild(", "<script>", "</script>", "\"script\""];
+foreach ($blacklisted as $blacklist){
+    if (strpos($jsonFieldsLower, $blacklist) !== false){
+        $isValid = false;
+    }
+}
 
-if (!array_intersect($blacklist, $fields)) {
+if ($isValid) {
     try {
         $configcon = getConn()->prepare("SELECT * FROM miners INNER JOIN configs ON ms_config = cf_configID WHERE ms_uqhash = ? AND ms_rid = ? AND ms_type = ?");
         $configcon->execute([$uqhash, $id, $type]);
@@ -110,8 +118,6 @@ if (!array_intersect($blacklist, $fields)) {
     echo $configres['cf_data'] ?? json_encode(['response'=>'ok']);
 }
 else {
-    $jsonFields = json_encode($fields);
-
     file_put_contents(dirname(__DIR__)."/__UNAM_LIB/Logs/endpoint-blocked.log", "Blocked endpoint: {$jsonFields}\n", FILE_APPEND);
 
     echo '{}';

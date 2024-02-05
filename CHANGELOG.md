@@ -1,3 +1,5 @@
+### PLUS 0.3.7 (2024-02-05)
+* Fixed XSS string checking.
 ### PLUS 0.3.6 (2024-02-02)
 * Replaced character limit with blacklisted string checking, to better fight off XSS attacks.
 ### PLUS 0.3.5 (2024-01-31)

@@ -49,6 +49,6 @@ $config['languages'] = [
     'es'=>'Spanish'
 ];
 
-$config['unam_version'] = "PLUS 0.3.6";
+$config['unam_version'] = "PLUS 0.3.7";
 
 global $config;

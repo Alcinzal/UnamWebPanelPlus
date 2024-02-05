@@ -1,4 +1,4 @@
-# UnamWebPanelPlus v0.3.6
+# UnamWebPanelPlus v0.3.7
 
 A modified version of Unam's [UnamWebPanel](https://github.com/UnamSanctam/UnamWebPanel).
 
@@ -13,95 +13,13 @@ A modified version of Unam's [UnamWebPanel](https://github.com/UnamSanctam/UnamW
 * Fight off XSS attacks - A simple system that will simply ignore a endpoint call if it contains any blacklisted strings.
 * More to come!
 
-## Checklist
-
-A checklist including what is done, what is planned, and a few ideas.
-
-- [x] Add total current hashrate for all algorithms
-	- [x] How much each computer mines on each algorithm on average, right below the total hashrate of each algorithm. Also add how many miners are on each algorithm.
-	- [x] It is only green if hashrate is more than 0, not if miners is more than 0
-- [ ] Statistics
-	- [x] Php throws an error if there is not data.
-	- [ ] The statistics section in the Plus page can take some time to load with big amounts of data, since most of the computing is done on the server with PHP. Some of it should be done in javascript, it is done in PHP because PHP has much better date and time integration.
-	- [x] Save timestamp to database instead of date, because then it is easier to translate to selected date format.
-	- [x] Change online and offline meaning in stats, so that online includes everything, except if it has been more than 180 seconds. Online simply means it has connected to the server in the last 3 minutes. Change "Total Online/Offliner Miners" to something like "Total Active/Offline Miners".
-	- [x] Also add a total active + idle option in the total extra
-	- [x] Optimize statssaver
-	- [x] Change so that hourly statistics does not show week number.
-	- [x] I need to fix that week is bugged on new year. It says 2023-12-31 is week 1.
-	- [x] Optimize the statistics, since almost all the graphs are the exact same code, just a little different.
-	- [ ] Add something that allows the user to see how the hashrate or how the miners are when the config gets changed?
-	- [x] Save what hidden and shown legends to localStorage. Also what interval is chosen, and what "Miners" is chosen at the Total Algorithms section.
-	- [x] Instead of saving all statistics to a json file, save it to the database instead.
-	- [x] IMPORTANT: The JSON files are available to whoever visits them directly.
-	- [x] Statistics should get updated each time the endpoint is called, but only write to current hour, and overwrite hour if it exists.
-	- [x] Save:
-		- [x] Date
-		- [x] Total Hashrate
-		- [x] Total Miners
-		- [x] Total Online
-		- [x] Total Offline
-		- [x] Online Miners
-		- [x] Offline Miners
-		- [x] Total Active
-		- [x] Total Idle
-		- [x] Total Starting
-		- [x] Total Paused
-		- [x] Total Stopped
-		- [x] Total Error
-		- [x] Total VRAM
-		- [x] Total Unknown
-- [ ] Configurations
-	- [x] Make configurations longer by default, and also add a section that allows the user to see how the configuration should look like and what values are allowed.
-	- [ ] Edit configurations so instead of text you get to toggle between options and write in a textbox for each option.
-- [ ] Add top processes that pauses the miner.
-- [ ] GPU and CPU
-	- [ ] Also maybe ranking the top GPUs and CPUs and how much they mine combined, and maybe on average too.
-	- [ ] Being able to transform the GPU and CPU charts into a ranking table.
-- [ ] Geo
-	- [x] If you use cloudflare, you can get the country by reading the header "CF-IPCountry", also need to get their IP from "CF-Connecting-IP", if not it gets cloudflares IP.
-	- [x] Optimize endpoint so the json file not always gets called, rather it gets called when the data should be displayed, in the table or in the stats.
-	- [x] Save the Countries and Continents as JSON files.
-	- [x] Change "Countries" to geo
-	- [x] Save countries to database
-	- [ ] Add more statistics for geo
-		- [x] How many are online from each country and continent
-		- [ ] How much each country and continent mines for each algorithm
-	- [ ] Add an option that would allow each region to get their own configuration.
-- [ ] In the miners tab also add a little toggle button that allows you to toggle between hiding the user or not, because for some reason if the user is hidden then you can see a lot more columns.
-- [ ] Which applications cause the most stealth pausing.
-- [x] Switching from plus back to statistics panel makes those stats disappear.
-- [ ] Add translations for plus and settings.
-- [ ] Settings
-	- [ ] Should look kinda like chrome settings
-	- [ ] Disable the webpanel, in case it gets hacked.
-	- [ ] Config section
-		- [ ] Password - string
-		- [ ] Database file - string
-		- [ ] Hashrate history enable - toggle
-			- [ ] Hashrate history limit - int (time)
-		- [ ] Failed login blocktime - int
-		- [ ] Failed login blocktries - int
-	- [ ] Automatic offline miners remover
-	- [ ] Change timezone, so that the statistics show the correct clock and time.
-	- [ ] Lifetime statistics
-		- [ ] How often they are saved - int (time) (maybe)
-		- [ ] How long they are saved - int (time)
-	- [ ] Database
-		- [ ] Importing database, so that if someone updates to a newer version with a different type of database, it can import the old data into the new data.
-	- [ ] Backup section, backuping statistics file to mega.nz or something similar.
-	- [ ] Update section, where you can check for updates from the github, and if there is a new update it updates it automatically.
-	- [ ] Advanced tab with some advanced things? Like adding miners manually, to test stuff.
-- [ ] Change the responsiveness of the Plus page. Zooming in and out and resizing window and such.
-- [ ] Change responsiveness of the statistics page.
-- [x] Limit algorithm to 15 characters to avoid getting xss attempts.
-- [x] Instead of limiting length to algorithm, add blacklisted words and check for those in the fields.
-
 ## Supported Projects
 
 * [SilentCryptoMiner](https://github.com/UnamSanctam/SilentCryptoMiner)
 
 ## Changelog
+### PLUS 0.3.7 (2024-02-05)
+* Fixed XSS string checking.
 ### PLUS 0.3.6 (2024-02-02)
 * Replaced character limit with blacklisted string checking, to better fight off XSS attacks.
 ### PLUS 0.3.5 (2024-01-31)

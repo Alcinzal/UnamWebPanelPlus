@@ -1,39 +1,27 @@
-### PLUS 0.3.7 (2024-02-05)
-* Fixed XSS string checking.
-### PLUS 0.3.6 (2024-02-02)
-* Replaced character limit with blacklisted string checking, to better fight off XSS attacks.
-### PLUS 0.3.5 (2024-01-31)
-* Added character limit to algorithms so XSS attempts do not go through.
-* Fixed small bug where statistics would throw an error if there was no statistics data.
-* Changed total hashrate cards so yellow means active miners but no hashrate, and green means active miners with hashrate.
-### PLUS 0.3.0 (2024-01-23)
-* Changed dates in database to Unix Timestamp for better compatibility with changing timezones.
-* Added Cloudflare support. Checks for headers 'CF-Connecting-IP' and 'CF-IPCountry'.
-* Changed formatting in unamtChart to use a 24 hour clock instead of 12 hour.
-* Changed countries to Geo.
-* Added continents to Geo.
-* Saved country names and continent names as json files, to prevent calling a static json from another server (country.io).
-* Optimized the Plus statsSaver file.
-* Changed the definition of online and offline miners. Offline meaning no connection for 180 seconds, and online meaning the opposite, no matter the status.
-* Optimized the displaying of statistics at the Plus page.
-* Fixed bug where 2023-12-31 was week 1. Now it is correct, showing week 53.
-### PLUS 0.2.5 (2024-01-16)
-* Fixed bug where statistics graphs would disappear.
-* Fixed the charts not updating when the resizing the browser.
-* Optimized code a little to not call the same files multiple times.
-* Fixed non-existent file being called.
-### PLUS 0.2.0 (2024-01-15)
-* Greatly improved statistics. Fully reworked, no more json files, everything happens directly in the database.
-* Statistics will now also save hidden or shown legends (labels) to local storage.
-* Improved countries. New miners gets their ip checked, and the country gets added to the database.
-### PLUS 0.1.0 (2024-01-14)
-* Added the XSS patch by UNAM
-* Increased the height of the configurations boxes.
-* Added an examples configurations box.
-* Added Plus page
-* Added total hashrate section.
-* Added statistics section. 
-* Added Countries section.
+### 1.8.0 (06/02/2024)
+* Rewrote almost all the code of the web panel to make it easier for others to edit
+* Added new functionality called IP Blocking with its own page that allows blocking IP addresses from connecting to the web panel
+* Added constant verification of the hashed password during login sessions, ensuring that any change to the password results in all users being logged out
+* Added an error log option to the config for enabling or disabling error logging
+* Changed the error logging function to only log vital error information
+* Rewrote datatables server side class to be shorter, more optimized and safer
+* Added further XSS mitigation to both the endpoint, the pages, the APIs and the datatable server side output
+* Added many strict headers that improve browser security
+* Added meta tags and headers alongside the current robots.txt to further discourage search engine indexing
+* Added line graph showing the total amount of online miners over time based on hashrate history reporting
+* Added pie graph showing the amount of GPU Miners and CPU Miners
+* Added pie graph showing the statuses of the miners
+* Remade some of the statistics to have better clarity
+* Added automatic SQLite database and database folder permissions checks that will display an error if they do not have the required permissions
+* Merged and removed many unused or unnecessary assets
+* Replaced SweetAlert2 with another plugin due to its malicious behaviour on .ru, .su, .by and .рф domains
+* Changed miner types to the more clear CPU Miner and GPU Miner types
+* Added new miner datatable field called Extra Data that will receive data such as resource reporting in future miner versions
+* Added logout button to the top navigation menu
+* Added all missing translations for all supported languages
+* Added language selection to the login page
+* Changed the terminology from Active to Mining
+* Improved the miner endpoint performance
 ### 1.7.1 (06/01/2023)
 * Moved miner statistics to a new "Statistics" page
 * Added more statistics such as GPU, CPU, Version and Algorithm graphs

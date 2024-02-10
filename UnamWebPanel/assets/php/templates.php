@@ -8,7 +8,7 @@ function unamMinerStatus($status){
         case 1:
             return "<span class='text-status-red'>{$larr['stopped']}</span>";
         case 2:
-            return "<span class='text-status-green'>{$larr['mining']}</span>";
+            return "<span class='text-status-green'>{$larr['mining']} ({$larr['active']})</span>";
         case 3:
             return "<span class='text-status-green'>{$larr['mining']} ({$larr['idle']})</span>";
         case 4:

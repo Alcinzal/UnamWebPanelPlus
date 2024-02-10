@@ -60,7 +60,7 @@ if(!empty(getParam('action'))) {
                 foreach ($hashrate as $value) {
                     $hashratearr[] = ['x' => date('Y-m-d H:i:s', $value['hr_date']), 'y' => $base->unam_sanitize($value['hashrate'])];
                 }
-                $base->unam_echoSuccess("<canvas class='hook-chart' data-chart-type='hashrate' data-chart-config='".json_encode(['type'=>'bar', 'data'=>['datasets'=>[['label'=>$hashrate[0]['hr_algorithm'], 'data'=>$hashratearr, 'fill'=>true]]], 'options'=>['responsive'=>true, 'scales'=>['x'=>['type'=>'time', 'max'=>date('Y-m-d H:i:00'), 'min'=>$hashratearr[0]['x'], 'time'=>['minUnit'=>'minute']], 'y'=>['min'=>0]]]])."'></canvas>");
+                $base->unam_echoSuccess("<canvas class='hook-chart' data-chart-type='hashrate' data-chart-config='".json_encode(['type'=>'bar', 'data'=>['datasets'=>[['label'=>$hashrate[0]['hr_algorithm'], 'data'=>$hashratearr, 'fill'=>true]]], 'options'=>['responsive'=>true, 'scales'=>['x'=>['type'=>'time', 'max'=>date('Y-m-d H:i:00'), 'min'=>$hashratearr[0]['x'], 'time'=>['minUnit'=>'minute', 'tooltipFormat'=>'yyyy-MM-dd HH:mm:ss', 'displayFormats'=>['minute'=>'HH:mm', 'hour'=>'HH:mm']]], 'y'=>['min'=>0]]]])."'></canvas>");
             } else {
                 $base->unam_echoFailure($larr['no_hashrate_for_miner']);
             }
@@ -69,7 +69,7 @@ if(!empty(getParam('action'))) {
             $ip = getParam('ip') ?: getParam('index');
             $base->unam_checkCondition(!filter_var($ip, FILTER_VALIDATE_IP), "{$larr['invalid']} IP.");
             $base->unam_checkCondition(!empty($base->unam_dbSelect(getConn(), 'ipblocking', '*', ['ipb_ip'=>$ip])), $larr['ip_already_blocked']);
-            $base->unam_dbInsert(getConn(), 'ipblocking', ['ipb_ip'=>$ip, 'ipb_note'=>getParam('note'), 'ipb_datetime'=>$currentDate]);
+            $base->unam_dbInsert(getConn(), 'ipblocking', ['ipb_ip'=>$ip, 'ipb_note'=>getParam('note'), 'ipb_datetime'=>time()]);
             $base->unam_echoSuccess($larr['status_added']);
             break;
         case 'ipblock-remove':

@@ -10,7 +10,7 @@ $miners = getConn()->query("SELECT ms_uqhash, ms_status, ms_algorithm, ms_versio
 
 foreach ($miners as $miner) {
     $stats['total']++;
-    if ($miner['ms_lastConnection'] && (strtotime($currentDate) - strtotime($miner['ms_lastConnection'])) > 3*60) {
+    if ($miner['ms_lastConnection'] && (time() - $miner['ms_lastConnection']) > 3*60) {
         $stats['offline']++;
     } else {
         $stats['status_' . $miner['ms_status']] = ($stats['status_' . $miner['ms_status']] ?? 0) + 1;
@@ -29,7 +29,7 @@ foreach ($miners as $miner) {
     }
 
     foreach ($newminers as $key => [$threshold,]) {
-        if ($miner['ms_creationDate'] && (strtotime($currentDate) - strtotime($miner['ms_creationDate'])) < $threshold) {
+        if ($miner['ms_creationDate'] && (time() - strtotime($miner['ms_creationDate'])) < $threshold) {
             $newminers[$key][1]++;
         }
     }
@@ -43,7 +43,7 @@ foreach ($miners as $miner) {
 <html lang="<?= $langID ?>">
 <head>
     <?php include dirname(__DIR__).'/assets/php/styles.php'; ?>
-    <title>Unam Web Panel &mdash; <?= $larr['statistics'] ?></title>
+    <title>Unam Web Panel+ &mdash; <?= $larr['statistics'] ?></title>
 </head>
 <body class="dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
@@ -69,7 +69,7 @@ foreach ($miners as $miner) {
                                 <?php
                                 $minercardsdata = [
                                     [$larr['total'], '', $stats['total']],
-                                    [$larr['mining'], 'bg-success', $stats['status_2'] ?? 0],
+                                    ["{$larr['mining']} ({$larr['active']})", 'bg-success', $stats['status_2'] ?? 0],
                                     ["{$larr['mining']} ({$larr['idle']})", 'bg-success', $stats['status_3'] ?? 0],
                                     [$larr['starting'], 'bg-warning', $stats['status_6'] ?? 0],
                                     [$larr['paused'], 'bg-warning', $stats['status_4'] ?? 0],
@@ -133,7 +133,7 @@ foreach ($miners as $miner) {
                                                         <h4><?= "{$larr['miners']} ({$larr['online']})" ?></h4>
                                                     </div>
                                                     <div class="card-body chart-miners">
-                                                        <canvas class="hook-chart" data-chart-type="miners" data-chart-config='<?= json_encode(['type'=>'line', 'data'=>['datasets'=>[['label'=>"{$larr['miners']} ({$larr['online']})", 'data'=>$minersarr, 'fill'=>true]]], 'options'=>['responsive'=>true, 'maintainAspectRatio'=>false, 'scales'=>['x'=>['type'=>'time', 'max'=>date('Y-m-d H:i:00'), 'min'=>date('Y-m-d H:i:00', strtotime("-30 days")), 'time'=>['minUnit'=>'minute']], 'y'=>['min'=>0]]]]) ?>'></canvas>
+                                                        <canvas class="hook-chart" data-chart-type="miners" data-chart-config='<?= json_encode(['type'=>'line', 'data'=>['datasets'=>[['label'=>"{$larr['miners']} ({$larr['online']})", 'data'=>$minersarr, 'fill'=>true]]], 'options'=>['responsive'=>true, 'maintainAspectRatio'=>false, 'scales'=>['x'=>['type'=>'time', 'max'=>date('Y-m-d H:i:00'), 'min'=>date('Y-m-d H:i:00', strtotime("-30 days")), 'time'=>['minUnit'=>'minute', 'tooltipFormat'=>'yyyy-MM-dd HH:mm:ss', 'displayFormats'=>['minute'=>'HH:mm', 'hour'=>'HH:mm']]], 'y'=>['min'=>0]]]]) ?>'></canvas>
                                                     </div>
                                                 </div>
                                             </div>
@@ -173,7 +173,7 @@ foreach ($miners as $miner) {
                                                         <h4><?= "{$larr['total']} {$larr['hashrate']}: ".$base->unam_sanitize($key) ?></h4>
                                                     </div>
                                                     <div class="card-body">
-                                                        <canvas class="hook-chart" data-chart-type="hashrate" data-chart-config='<?= json_encode(['type'=>'bar', 'data'=>['datasets'=>[['label'=>$base->unam_sanitize($key), 'data'=>$value, 'fill'=>true]]], 'options'=>['responsive'=>true, 'scales'=>['x'=>['type'=>'time', 'max'=>date('Y-m-d H:i:00'), 'min'=>$value[0]['x'], 'time'=>['minUnit'=>'minute']], 'y'=>['min'=>0]]]]) ?>'></canvas>
+                                                        <canvas class="hook-chart" data-chart-type="hashrate" data-chart-config='<?= json_encode(['type'=>'bar', 'data'=>['datasets'=>[['label'=>$base->unam_sanitize($key), 'data'=>$value, 'fill'=>true]]], 'options'=>['responsive'=>true, 'scales'=>['x'=>['type'=>'time', 'max'=>date('Y-m-d H:i:00'), 'min'=>$value[0]['x'], 'time'=>['minUnit'=>'minute', 'tooltipFormat'=>'yyyy-MM-dd HH:mm:ss', 'displayFormats'=>['minute'=>'HH:mm', 'hour'=>'HH:mm']]], 'y'=>['min'=>0]]]]) ?>'></canvas>
                                                     </div>
                                                 </div>
                                             </div>
@@ -196,7 +196,7 @@ foreach ($miners as $miner) {
                             <div class="row">
                                 <?php
                                 $minersPieData = [
-                                    $larr['mining']=>['color'=>'#28a745', 'value'=>$stats['status_2'] ?? 0],
+                                    "{$larr['mining']} ({$larr['active']})"=>['color'=>'#28a745', 'value'=>$stats['status_2'] ?? 0],
                                     "{$larr['mining']} ({$larr['idle']})"=>['color'=>'#28a745', 'value'=>$stats['status_3'] ?? 0],
                                     $larr['starting']=>['color'=>'#f39c12', 'value'=>$stats['status_6'] ?? 0],
                                     $larr['paused']=>['color'=>'#f39c12', 'value'=>$stats['status_4'] ?? 0],

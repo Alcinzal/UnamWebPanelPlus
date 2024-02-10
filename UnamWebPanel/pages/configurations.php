@@ -17,7 +17,7 @@ foreach ($configs as $configdata) {
 <html lang="<?= $langID ?>">
 <head>
     <?php include dirname(__DIR__).'/assets/php/styles.php'; ?>
-    <title>Unam Web Panel &mdash; <?= $larr['configurations'] ?></title>
+    <title>Unam Web Panel+ &mdash; <?= $larr['configurations'] ?></title>
 </head>
 <body class="dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">

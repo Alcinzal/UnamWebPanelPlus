@@ -28,6 +28,7 @@ $langarr = [
     'cancel'=>['en'=>'Cancel', 'sv'=>'Avbryt', 'fr'=>'Annuler', 'de'=>'Abbrechen', 'pl'=>'Anuluj', 'ru'=>'Отмена', 'uk'=>'Відмінити', 'es'=>'Cancelar'],
     'url'=>['en'=>'URL', 'sv'=>'URL', 'fr'=>'URL', 'de'=>'URL', 'pl'=>'URL', 'ru'=>'URL', 'uk'=>'URL', 'es'=>'URL'],
     'stopped'=>['en'=>'Stopped', 'sv'=>'Stoppad', 'fr'=>'Arrêté', 'de'=>'Angehalten', 'pl'=>'Zatrzymany', 'ru'=>'Остановлено', 'uk'=>'Зупинився', 'es'=>'Parado'],
+    'active'=>['en'=>'Active', 'sv'=>'Aktiv', 'fr'=>'Actif', 'de'=>'Aktiv', 'pl'=>'Aktywny', 'ru'=>'Активно', 'uk'=>'Активний', 'es'=>'Activo'],
     'mining'=>['en'=>'Mining', 'sv'=>'Mining', 'fr'=>'Minage', 'de'=>'Mining', 'pl'=>'Kopanie', 'ru'=>'Майнинг', 'uk'=>'Майнінг', 'es'=>'Minería'],
     'idle'=>['en'=>'Idle', 'sv'=>'Vänteläge', 'fr'=>'En attente', 'de'=>'Wartend', 'pl'=>'Oczekujący', 'ru'=>'Ожидание', 'uk'=>'Очікування', 'es'=>'En espera'],
     'paused'=>['en'=>'Paused', 'sv'=>'Pausad', 'fr'=>'Pause', 'de'=>'Pausiert', 'pl'=>'Zapauzowany', 'ru'=>'Приостановлено', 'uk'=>'Призупинено', 'es'=>'Pausado'],

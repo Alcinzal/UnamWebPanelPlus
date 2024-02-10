@@ -11,7 +11,7 @@ if($loggedin){
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <title>Unam Web Panel &mdash; <?= $larr['login'] ?></title>
+    <title>Unam Web Panel+ &mdash; <?= $larr['login'] ?></title>
 
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <link rel="stylesheet" href="../assets/modules/fontawesome-free/css/fontawesome.min.css">
@@ -25,7 +25,7 @@ if($loggedin){
 <div class="external-page-box">
     <div class="card card-dark card-outline card-primary">
         <div class="card-header text-center">
-            <h4><b>Unam</b> Web Panel</h4>
+            <h4><b>Unam</b> Web Panel+</h4>
         </div>
         <div class="card-body">
             <form action="#" class="unam-login">

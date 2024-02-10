@@ -23,8 +23,6 @@ if(!isset($_SESSION['csrf_token'])){
 
 $loggedin = !empty($_SESSION['logged_in']) && password_verify($config['password'], $_SESSION['logged_in']);
 
-$currentDate = date('Y-m-d H:i:s');
-
 if(empty($_SESSION['lang'])){
     $_SESSION['lang'] = $base->unam_getBrowserLanguages(array_keys($config['languages']));
 }

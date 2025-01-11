@@ -1,7 +1,7 @@
 > [!CAUTION]
 > I have not updated this fork in quite a while and, unfortunately, do not plan to update it anytime soon. Additionally, I have been informed of a bug in my version of this panel: countries do not display correctly if you are not using Cloudflare for hosting.
 > 
-> I therefore recommend that everyone use the original [UnamWebPanel](https://github.com/UnamSanctam/UnamWebPanel) instead.
+> There might also be other bugs I am unaware of. Therefore, I recommend that everyone use the original [UnamWebPanel](https://github.com/UnamSanctam/UnamWebPanel) instead.
 
 <img src="https://github.com/Alcinzal/UnamWebPanelPlus/blob/master/UnamWebPanelPlus.png?raw=true">
 
